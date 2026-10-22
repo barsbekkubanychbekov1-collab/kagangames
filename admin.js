@@ -26,7 +26,17 @@ function displayGameLabel(gameId) {
     moonhop: "Лунный прыжок",
     crystals: "Кристальная память",
     tacstrike: "Тактический прорыв",
-    orbit: "Защитник орбиты"
+    orbit: "Защитник орбиты",
+    bubblepop: "Пузырьковый переполох",
+    garden: "Садовая эстафета",
+    skycourier: "Небесный курьер",
+    pulse: "Ритм-мастер",
+    maze: "Лабиринт светлячка",
+    tinytower: "Башня на ветру",
+    coral: "Коралловый ныряльщик",
+    meteorguard: "Метеорный дозор",
+    lantern: "Тайна фонарей",
+    pixelchef: "Пиксельный повар"
   })[gameId] || "—";
 }
 

@@ -115,6 +115,16 @@ h1, h2, h3, p { margin-top: 0; }
 .game-cover-crystals { background: radial-gradient(ellipse at 70% 25%, #d2fffc 0 6%, transparent 7%), radial-gradient(ellipse at 70% 25%, #70d6db 0 18%, transparent 19%), linear-gradient(145deg, #317b92, #344c85 47%, #242b58); }
 .game-cover-orbit { background: radial-gradient(ellipse at 70% 25%, #ffd194 0 5%, transparent 6%), radial-gradient(ellipse at 70% 25%, #ff766e 0 17%, transparent 18%), linear-gradient(145deg, #8a4757, #55396f 47%, #252547); }
 .game-cover-tactical { background: radial-gradient(ellipse at 68% 35%, #b6c8a2 0 5%, transparent 6%), radial-gradient(ellipse at 68% 35%, #586a53 0 20%, transparent 21%), linear-gradient(145deg, #687965, #3c5148 47%, #252d2b); }
+.game-cover-bubble { background: radial-gradient(circle at 66% 35%, #a4f4f2 0 9%, transparent 10%), radial-gradient(circle at 39% 68%, #80dff2 0 13%, transparent 14%), linear-gradient(145deg, #326e8b, #423875 65%, #252445); }
+.game-cover-garden { background: radial-gradient(circle at 70% 32%, #f4d274 0 9%, transparent 10%), radial-gradient(circle at 38% 72%, #83c367 0 15%, transparent 16%), linear-gradient(145deg, #447653, #36503c 65%, #28322b); }
+.game-cover-sky { background: radial-gradient(ellipse at 63% 34%, #f4e4a5 0 12%, transparent 13%), linear-gradient(145deg, #4d87a3, #53638b 65%, #303858); }
+.game-cover-pulse { background: radial-gradient(ellipse at 50% 50%, #e89dff 0 4%, transparent 5%), linear-gradient(145deg, #7d487e, #423a77 55%, #282b50); }
+.game-cover-maze { background: repeating-linear-gradient(90deg, #587173 0 13px, transparent 13px 27px), linear-gradient(145deg, #304e55, #27383e 68%, #1e292e); }
+.game-cover-tower { background: linear-gradient(0deg, #c28d56 0 24%, transparent 24%), linear-gradient(145deg, #607b95, #394e6a 60%, #252f45); }
+.game-cover-coral { background: radial-gradient(ellipse at 50% 70%, #64dbbf 0 9%, transparent 10%), linear-gradient(145deg, #2e8392, #225a75 58%, #233b58); }
+.game-cover-meteor { background: radial-gradient(ellipse at 65% 38%, #ffb47a 0 8%, transparent 9%), linear-gradient(145deg, #713d58, #3a3159 60%, #242640); }
+.game-cover-lantern { background: radial-gradient(circle at 38% 40%, #f6d778 0 7%, transparent 8%), radial-gradient(circle at 67% 62%, #c99dff 0 10%, transparent 11%), linear-gradient(145deg, #6c5579, #40375d 65%, #26263f); }
+.game-cover-chef { background: radial-gradient(ellipse at 67% 28%, #f4d273 0 9%, transparent 10%), linear-gradient(145deg, #936348, #63483e 60%, #34313a); }
 .game-cover::before, .game-cover::after { content: ""; position: absolute; border-radius: 50%; }
 .game-cover::before { z-index: -1; width: 160px; height: 160px; right: -28px; top: -46px; border: 1px solid #ffffff55; box-shadow: 0 0 0 14px #ffffff0b, 0 0 0 30px #ffffff08; }
 .game-cover::after { z-index: -1; width: 120px; height: 25px; left: 15%; bottom: 18px; border-top: 2px solid #ffffff75; border-radius: 50%; transform: rotate(-15deg); filter: drop-shadow(0 0 9px #ffffff8a); }

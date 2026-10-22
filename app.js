@@ -3,7 +3,17 @@ const games = [
   { id: "neon", title: "Неоновые гонки", genre: "Гонки", studio: "Kagan Games", initials: "02", art: "neon", tag: "НЕ СТОЛКНИСЬ", description: "Мчись по неоновой трассе и маневрируй между препятствиями.", controls: "← → / A-D или веди пальцем по полю" },
   { id: "moonhop", title: "Лунный прыжок", genre: "Платформер", studio: "Kagan Games", initials: "03", art: "moonhop", tag: "ВЫШЕ К ЗВЁЗДАМ", description: "Прыгай по платформам всё выше и не падай в бездну.", controls: "← → и Пробел — прыгать; на телефоне коснись поля" },
   { id: "crystals", title: "Кристальная память", genre: "Головоломка", studio: "Kagan Games", initials: "04", art: "crystals", tag: "НАЙДИ ПАРЫ", description: "Открывай кристаллы и собирай одинаковые пары.", controls: "Нажимай на кристаллы мышью или пальцем" },
-  { id: "tacstrike", title: "Тактический прорыв", genre: "Тактический шутер", studio: "Kagan Games", initials: "05", art: "tactical", tag: "ЗАДАНИЕ: ПРОРЫВ", description: "Оригинальный одиночный тактический шутер: целься, перезаряжайся и останови волну ботов.", controls: "Мышь — цель и огонь · WASD — движение · R — перезарядка · на телефоне веди и касайся поля" }
+  { id: "tacstrike", title: "Тактический прорыв", genre: "Тактический шутер", studio: "Kagan Games", initials: "05", art: "tactical", tag: "КАМПАНИЯ · 10 УРОВНЕЙ", description: "Пройди десять заданий: целься, перезаряжайся и останови волны ботов.", controls: "Мышь — цель и огонь · WASD — движение · R — перезарядка · на телефоне веди и касайся поля" },
+  { id: "bubblepop", title: "Пузырьковый переполох", genre: "Аркада", studio: "Kagan Games", initials: "06", art: "bubble", tag: "ЛОПНИ ВСЕ", description: "Лопай пузырьки, пока они не улетели, и набери 15 попаданий.", controls: "Нажимай на пузырьки мышью или пальцем" },
+  { id: "garden", title: "Садовая эстафета", genre: "Аркада", studio: "Kagan Games", initials: "07", art: "garden", tag: "СОБЕРИ УРОЖАЙ", description: "Лови спелые яблоки и уворачивайся от колючек.", controls: "← → / A-D или веди пальцем по полю" },
+  { id: "skycourier", title: "Небесный курьер", genre: "Приключение", studio: "Kagan Games", initials: "08", art: "sky", tag: "ДОСТАВЬ 10", description: "Летай между облаками, собирай посылки и обходи дроны.", controls: "WASD / стрелки или веди пальцем по полю" },
+  { id: "pulse", title: "Ритм-мастер", genre: "Ритм", studio: "Kagan Games", initials: "09", art: "pulse", tag: "ПОПАДИ В РИТМ", description: "Останови бегущий импульс в целевой зоне десять раз.", controls: "Пробел или касание — остановить импульс" },
+  { id: "maze", title: "Лабиринт светлячка", genre: "Головоломка", studio: "Kagan Games", initials: "10", art: "maze", tag: "НАЙДИ ВЫХОД", description: "Проведи светлячка через лабиринт к светящимся воротам.", controls: "WASD / стрелки или касайся соседних клеток" },
+  { id: "tinytower", title: "Башня на ветру", genre: "Аркада", studio: "Kagan Games", initials: "11", art: "tower", tag: "ПОСТРОЙ 10 ЭТАЖЕЙ", description: "Точно ставь движущиеся блоки и построй высокую башню.", controls: "Пробел или касание — поставить блок" },
+  { id: "coral", title: "Коралловый ныряльщик", genre: "Приключение", studio: "Kagan Games", initials: "12", art: "coral", tag: "8 ЖЕМЧУЖИН", description: "Ныряй за жемчугом, уворачиваясь от морских мин.", controls: "WASD / стрелки или веди пальцем по полю" },
+  { id: "meteorguard", title: "Метеорный дозор", genre: "Экшен", studio: "Kagan Games", initials: "13", art: "meteor", tag: "ЗАЩИТИ ГОРОД", description: "Разбивай метеоры до того, как они достигнут земли.", controls: "Нажимай на метеоры мышью или пальцем" },
+  { id: "lantern", title: "Тайна фонарей", genre: "Головоломка", studio: "Kagan Games", initials: "14", art: "lantern", tag: "ЗАПОМНИ СВЕТ", description: "Повторяй последовательности огоньков и пройди пять раундов.", controls: "Нажимай на огоньки мышью или пальцем" },
+  { id: "pixelchef", title: "Пиксельный повар", genre: "Аркада", studio: "Kagan Games", initials: "15", art: "chef", tag: "ЗАКРОЙ ЗАКАЗ", description: "Лови ингредиенты в правильном порядке и приготовь три блюда.", controls: "← → / A-D или веди пальцем по полю" }
 ];
 
 const rankings = {
@@ -41,7 +51,7 @@ const gameHeight = gameCanvas.height;
 function gameCard(game) {
   return `<article class="game-card">
     <div class="game-cover game-cover-${game.art}">
-      <span class="cover-tag">${game.tag}</span><span class="cover-symbol" aria-hidden="true">${{ starcatch: "✦", neon: "↗", moonhop: "☾", crystals: "◇", orbit: "✹", tactical: "⌖" }[game.art]}</span><span class="cover-initials">${game.initials}</span>
+      <span class="cover-tag">${game.tag}</span><span class="cover-symbol" aria-hidden="true">${{ starcatch: "✦", neon: "↗", moonhop: "☾", crystals: "◇", orbit: "✹", tactical: "⌖", bubble: "○", garden: "❋", sky: "✈", pulse: "∿", maze: "▦", tower: "▤", coral: "♧", meteor: "☄", lantern: "✧", chef: "♨" }[game.art]}</span><span class="cover-initials">${game.initials}</span>
     </div>
     <div class="game-card-info">
       <h3 class="game-card-title">${game.title}</h3>
@@ -64,7 +74,7 @@ function renderGames() {
   const featured = document.querySelector("#featured-games");
   const catalog = document.querySelector("#catalog-games");
   const results = filteredGames();
-  featured.innerHTML = games.map(gameCard).join("");
+  featured.innerHTML = games.slice(0, 5).map(gameCard).join("");
   catalog.innerHTML = results.map(gameCard).join("");
   document.querySelector("#catalog-count").textContent = `${results.length} ${results.length === 1 ? "игра" : results.length >= 2 && results.length <= 4 ? "игры" : "игр"}`;
   document.querySelector("#empty-games").hidden = results.length > 0;
@@ -195,6 +205,9 @@ function startGame(id) {
     gameState.ammo = 12;
     gameState.reserveAmmo = 36;
     gameState.kills = 0;
+    gameState.level = 1;
+    gameState.levelKills = 0;
+    gameState.levelTransition = 0;
     gameState.reloadTime = 0;
     gameState.attackTime = 2.6;
     gameState.muzzleTime = 0;
@@ -202,21 +215,60 @@ function startGame(id) {
     gameState.cameraY = 0;
     gameState.crosshairX = gameWidth / 2;
     gameState.crosshairY = gameHeight / 2;
-    gameState.targets = Array.from({ length: 4 }, (_, index) => ({
-      x: 280 + index * 135 + Math.random() * 35,
-      y: 215 + Math.random() * 65,
-      phase: Math.random() * Math.PI * 2,
-      alive: true
-    }));
+    createTacticalTargets(gameState);
   }
   if (id === "crystals") {
     const icons = ["✦", "◆", "☾", "●", "❋", "⬟", "✧", "⬢"];
     gameState.cards = [...icons, ...icons].sort(() => Math.random() - 0.5);
   }
+  if (id === "maze") {
+    gameState.maze = [
+      "############",
+      "#S.........#",
+      "##########.#",
+      "#..........#",
+      "#.########.#",
+      "#..........#",
+      "##########E#"
+    ];
+    gameState.mazeX = 1;
+    gameState.mazeY = 1;
+    gameState.mazeMoveTime = 0;
+    gameState.moves = 0;
+  }
+  if (id === "tinytower") {
+    gameState.blocks = [{ x: 330, y: 485, w: 300 }];
+    gameState.blockX = 330;
+    gameState.blockDirection = 1;
+    gameState.blockWidth = 300;
+    gameState.layer = 0;
+  }
+  if (id === "pulse") {
+    gameState.pulseX = 80;
+    gameState.pulseDirection = 1;
+    gameState.targetX = 250 + Math.random() * 460;
+    gameState.hits = 0;
+    gameState.misses = 0;
+  }
+  if (id === "lantern") {
+    gameState.round = 1;
+    gameState.sequence = [];
+    gameState.sequenceStep = 0;
+    gameState.sequenceTimer = 0;
+    gameState.litPad = -1;
+    gameState.playerTurn = false;
+    gameState.playerStep = 0;
+    startLanternRound(gameState);
+  }
+  if (id === "pixelchef") {
+    gameState.recipe = ["🍎", "🥕", "🍄"];
+    gameState.recipeStep = 0;
+    gameState.dishes = 0;
+  }
   document.querySelector("#game-dialog-title").textContent = game.title;
   document.querySelector("#game-dialog-description").textContent = game.description;
   document.querySelector("#game-controls").textContent = game.controls;
-  document.querySelector("#game-score").textContent = id === "crystals" ? "Ходы: 0" : id === "tacstrike" ? "Боты: 0 / 4" : "Счёт: 0";
+  document.querySelector("#game-score").textContent = id === "tacstrike" ? "Уровень: 1 / 10" : "Счёт: 0";
   const dialog = document.querySelector("#game-dialog");
   if (!dialog.open) dialog.showModal();
   gameKeys.clear();
@@ -231,12 +283,36 @@ function endGame(message) {
   gameState.endMessage = message;
 }
 
+function createTacticalTargets(state) {
+  const count = 3 + state.level;
+  state.targets = Array.from({ length: count }, (_, index) => ({
+    x: 105 + index * (750 / Math.max(1, count - 1)),
+    y: 205 + Math.random() * 75,
+    phase: Math.random() * Math.PI * 2,
+    speed: 1 + state.level * 0.14,
+    alive: true
+  }));
+  state.levelKills = 0;
+  state.attackTime = Math.max(1.45, 3.7 - state.level * 0.19);
+}
+
+function startLanternRound(state) {
+  state.sequence = Array.from({ length: state.round + 2 }, () => Math.floor(Math.random() * 4));
+  state.sequenceStep = 0;
+  state.sequenceTimer = 0.65;
+  state.litPad = -1;
+  state.playerTurn = false;
+  state.playerStep = 0;
+}
+
 function updateGame(delta) {
   const state = gameState;
   if (!state || state.ended) return;
   state.elapsed += delta;
   const movingLeft = gameKeys.has("ArrowLeft") || gameKeys.has("KeyA");
   const movingRight = gameKeys.has("ArrowRight") || gameKeys.has("KeyD");
+  const movingUp = gameKeys.has("ArrowUp") || gameKeys.has("KeyW");
+  const movingDown = gameKeys.has("ArrowDown") || gameKeys.has("KeyS");
 
   if (currentGameId === "starcatch") {
     state.playerX = Math.max(48, Math.min(gameWidth - 48, state.playerX + (Number(movingRight) - Number(movingLeft)) * 420 * delta));
@@ -308,8 +384,8 @@ function updateGame(delta) {
     }
     if (state.playerY > gameHeight + 30) endGame("Прыжок не удался. Попробуй снова!");
   } else if (currentGameId === "tacstrike") {
-    const movingForward = gameKeys.has("KeyW") || gameKeys.has("ArrowUp");
-    const movingBackward = gameKeys.has("KeyS") || gameKeys.has("ArrowDown");
+    const movingForward = movingUp;
+    const movingBackward = movingDown;
     state.cameraX += (Number(movingRight) - Number(movingLeft)) * 175 * delta;
     state.cameraX = Math.max(-115, Math.min(115, state.cameraX));
     state.cameraY += (Number(movingBackward) - Number(movingForward)) * 110 * delta;
@@ -325,21 +401,231 @@ function updateGame(delta) {
       }
     }
     state.muzzleTime = Math.max(0, state.muzzleTime - delta);
+    if (state.levelTransition > 0) state.levelTransition -= delta;
     state.attackTime -= delta;
-    if (state.attackTime <= 0 && state.targets.some((target) => target.alive)) {
+    if (state.levelTransition <= 0 && state.attackTime <= 0 && state.targets.some((target) => target.alive)) {
       state.health = Math.max(0, state.health - 8);
-      state.attackTime = 2.1 + Math.random() * 1.2;
-      if (state.health <= 0) endGame(`Задание провалено. Ты остановил ${state.kills} из 4 ботов.`);
+      state.attackTime = Math.max(1.45, 3.7 - state.level * 0.19) + Math.random() * 0.5;
+      if (state.health <= 0) endGame(`Кампания завершена на уровне ${state.level}. Остановлено ботов: ${state.kills}.`);
     }
     state.targets.forEach((target) => {
       if (!target.alive) return;
-      target.phase += delta * 1.7;
-      target.x += Math.sin(target.phase) * 24 * delta;
+      target.phase += delta * target.speed;
+      target.x += Math.sin(target.phase) * (24 + state.level * 2) * delta;
     });
-    if (state.kills === state.targets.length) endGame("Задание выполнено! Район зачищен.");
+    if (state.targets.every((target) => !target.alive) && state.levelTransition <= 0) {
+      if (state.level === 10) {
+        endGame(`Кампания пройдена! Остановлено ботов: ${state.kills}.`);
+      } else {
+        state.level += 1;
+        state.levelTransition = 1.4;
+        state.health = Math.min(100, state.health + 12);
+        state.ammo = 12;
+        state.reserveAmmo = Math.min(72, state.reserveAmmo + 12);
+        createTacticalTargets(state);
+      }
+    }
+  }
+  if (currentGameId === "bubblepop" || currentGameId === "meteorguard") {
+    state.spawn += delta;
+    const interval = currentGameId === "bubblepop" ? 0.72 : 0.78;
+    if (state.spawn >= interval) {
+      state.spawn = 0;
+      state.objects.push({
+        x: 35 + Math.random() * (gameWidth - 70),
+        y: currentGameId === "bubblepop" ? gameHeight + 20 : -25,
+        r: currentGameId === "bubblepop" ? 20 + Math.random() * 15 : 17 + Math.random() * 13,
+        speed: 90 + Math.random() * 100,
+        drift: (Math.random() - 0.5) * 45,
+        phase: Math.random() * 6
+      });
+    }
+    state.objects = state.objects.filter((item) => {
+      item.y += (currentGameId === "bubblepop" ? -item.speed : item.speed) * delta;
+      item.x += (Math.sin(state.elapsed * 2 + item.phase) * 14 + item.drift) * delta;
+      const escaped = currentGameId === "bubblepop" ? item.y < -item.r : item.y > gameHeight + item.r;
+      if (escaped) {
+        state.lives -= 1;
+        if (state.lives <= 0) endGame("Цели ускользнули. Попробуй ещё раз!");
+        return false;
+      }
+      return true;
+    });
+    if (state.collected >= 15) {
+      endGame(currentGameId === "bubblepop" ? "Отличная реакция! Все 15 пузырьков лопнули." : "Город спасён! Все метеоры уничтожены.");
+    }
+  } else if (currentGameId === "garden" || currentGameId === "pixelchef") {
+    state.playerX = Math.max(45, Math.min(gameWidth - 45, state.playerX + (Number(movingRight) - Number(movingLeft)) * 380 * delta));
+    state.spawn += delta;
+    if (state.spawn >= (currentGameId === "garden" ? 0.64 : 0.76)) {
+      state.spawn = 0;
+      const ingredients = ["🍎", "🥕", "🍄"];
+      state.objects.push({
+        x: 35 + Math.random() * (gameWidth - 70),
+        y: -25,
+        r: 17,
+        speed: 145 + Math.random() * 90,
+        bad: currentGameId === "garden" && Math.random() < 0.23,
+        ingredient: ingredients[Math.floor(Math.random() * ingredients.length)]
+      });
+    }
+    state.objects = state.objects.filter((item) => {
+      item.y += item.speed * delta;
+      if (Math.abs(item.x - state.playerX) < 38 && item.y > 455 && item.y < 525) {
+        if (currentGameId === "garden") {
+          if (item.bad) state.lives -= 1;
+          else state.collected += 1;
+        } else if (item.ingredient === state.recipe[state.recipeStep]) {
+          state.recipeStep += 1;
+          if (state.recipeStep === state.recipe.length) {
+            state.recipeStep = 0;
+            state.dishes += 1;
+          }
+        } else {
+          state.recipeStep = 0;
+        }
+        return false;
+      }
+      if (item.y > gameHeight + 20) {
+        if (currentGameId === "garden" && !item.bad) state.lives -= 1;
+        return false;
+      }
+      return true;
+    });
+    if (currentGameId === "garden") {
+      state.score = state.collected * 10;
+      if (state.lives <= 0) endGame(`Собрано яблок: ${state.collected}. Попробуй ещё раз!`);
+      if (state.collected >= 12) endGame("Урожай собран! Ты настоящий мастер сада.");
+    } else {
+      state.score = state.dishes;
+      if (state.dishes >= 3) endGame("Три заказа готовы! Шеф-повар доволен.");
+    }
+  } else if (currentGameId === "skycourier" || currentGameId === "coral") {
+    const speed = currentGameId === "skycourier" ? 290 : 255;
+    state.playerX = Math.max(35, Math.min(gameWidth - 35, state.playerX + (Number(movingRight) - Number(movingLeft)) * speed * delta));
+    state.playerY = Math.max(80, Math.min(500, state.playerY + (Number(movingDown) - Number(movingUp)) * speed * delta));
+    state.spawn += delta;
+    if (state.spawn >= 0.82) {
+      state.spawn = 0;
+      state.objects.push({
+        x: 35 + Math.random() * (gameWidth - 70),
+        y: -25,
+        r: 16,
+        speed: 100 + Math.random() * 90,
+        bad: Math.random() < 0.32,
+        icon: currentGameId === "skycourier" ? (Math.random() < 0.32 ? "◆" : "✉") : (Math.random() < 0.32 ? "✹" : "●")
+      });
+    }
+    state.objects = state.objects.filter((item) => {
+      item.y += item.speed * delta;
+      if (Math.hypot(item.x - state.playerX, item.y - state.playerY) < item.r + 22) {
+        if (item.bad) state.lives -= 1;
+        else state.collected += 1;
+        return false;
+      }
+      return item.y < gameHeight + 25;
+    });
+    state.score = state.collected * 10;
+    if (state.lives <= 0) endGame("Путешествие окончено. Попробуй ещё раз!");
+    if (state.collected >= (currentGameId === "skycourier" ? 10 : 8)) {
+      endGame(currentGameId === "skycourier" ? "Доставка завершена! Все посылки на месте." : "Жемчужины собраны! Риф спасён.");
+    }
+  } else if (currentGameId === "pulse") {
+    state.pulseX += state.pulseDirection * 340 * delta;
+    if (state.pulseX >= 860 || state.pulseX <= 100) state.pulseDirection *= -1;
+  } else if (currentGameId === "maze") {
+    state.mazeMoveTime = Math.max(0, state.mazeMoveTime - delta);
+    if (state.mazeMoveTime === 0) {
+      const dx = Number(movingRight) - Number(movingLeft);
+      const dy = Number(movingDown) - Number(movingUp);
+      if (dx || dy) moveMazePlayer(state, dx, dy);
+    }
+    state.score = state.moves;
+  } else if (currentGameId === "tinytower") {
+    state.blockX += state.blockDirection * (190 + state.layer * 12) * delta;
+    if (state.blockX <= 130 || state.blockX + state.blockWidth >= 830) state.blockDirection *= -1;
+    state.blockX = Math.max(130, Math.min(830 - state.blockWidth, state.blockX));
+    state.score = state.layer;
+  } else if (currentGameId === "lantern") {
+    if (!state.playerTurn) {
+      state.sequenceTimer -= delta;
+      if (state.sequenceTimer <= 0) {
+        if (state.litPad >= 0) {
+          state.litPad = -1;
+          state.sequenceTimer = 0.24;
+        } else if (state.sequenceStep < state.sequence.length) {
+          state.litPad = state.sequence[state.sequenceStep];
+          state.sequenceStep += 1;
+          state.sequenceTimer = 0.46;
+        } else {
+          state.playerTurn = true;
+          state.sequenceTimer = 0;
+        }
+      }
+    }
   }
   if (currentGameId === "crystals" && state.matched.size === 16) {
     endGame(`Все пары собраны за ${state.attempts} ходов!`);
+  }
+}
+
+function moveMazePlayer(state, dx, dy) {
+  const nextX = state.mazeX + dx;
+  const nextY = state.mazeY + dy;
+  if (nextY < 0 || nextY >= state.maze.length || nextX < 0 || nextX >= state.maze[0].length) return;
+  if (state.maze[nextY][nextX] === "#") return;
+  state.mazeX = nextX;
+  state.mazeY = nextY;
+  state.moves += 1;
+  state.mazeMoveTime = 0.14;
+  if (state.maze[nextY][nextX] === "E") endGame(`Выход найден за ${state.moves} шагов!`);
+}
+
+function handleGameAction() {
+  if (!gameState || gameState.ended) return;
+  const state = gameState;
+  if (currentGameId === "pulse") {
+    if (Math.abs(state.pulseX - state.targetX) <= 43) {
+      state.hits += 1;
+      state.targetX = 210 + Math.random() * 540;
+      if (state.hits >= 10) endGame("Идеальный ритм! Все десять импульсов пойманы.");
+    } else {
+      state.misses += 1;
+      if (state.misses >= 3) endGame(`Попаданий: ${state.hits}. Попробуй поймать ритм!`);
+    }
+  } else if (currentGameId === "tinytower") {
+    const previous = state.blocks[state.blocks.length - 1];
+    const left = Math.max(previous.x, state.blockX);
+    const right = Math.min(previous.x + previous.w, state.blockX + state.blockWidth);
+    const width = right - left;
+    if (width < 18) {
+      endGame(`Башня из ${state.layer} этажей! Попробуй ещё раз.`);
+      return;
+    }
+    state.layer += 1;
+    state.blockWidth = width;
+    state.blocks.push({ x: left, y: 485 - state.layer * 35, w: width });
+    state.blockX = left;
+    state.blockDirection *= -1;
+    if (state.layer >= 10) endGame("Десять этажей! Башня выдержала ветер.");
+  }
+}
+
+function selectLanternPad(state, pad) {
+  if (!state.playerTurn || state.ended) return;
+  if (state.sequence[state.playerStep] !== pad) {
+    state.lives -= 1;
+    if (state.lives <= 0) endGame(`Последовательность пройдена до раунда ${state.round}.`);
+    else startLanternRound(state);
+    return;
+  }
+  state.playerStep += 1;
+  if (state.playerStep === state.sequence.length) {
+    if (state.round >= 5) endGame("Пять раундов пройдены! Ты помнишь каждый огонёк.");
+    else {
+      state.round += 1;
+      startLanternRound(state);
+    }
   }
 }
 
@@ -350,7 +636,12 @@ function drawGame() {
   const gradients = {
     starcatch: ["#102132", "#253358"], neon: ["#15122e", "#32194b"],
     moonhop: ["#17223a", "#3d4167"], crystals: ["#18253a", "#34294e"],
-    tacstrike: ["#263c3c", "#1b2425"]
+    tacstrike: ["#263c3c", "#1b2425"], bubblepop: ["#15334d", "#39285f"],
+    garden: ["#264b45", "#3e5937"], skycourier: ["#173b68", "#819fc1"],
+    pulse: ["#241b3c", "#44255c"], maze: ["#162a34", "#273b41"],
+    tinytower: ["#30475e", "#715a47"], coral: ["#123f54", "#174c6b"],
+    meteorguard: ["#241d3b", "#552c45"], lantern: ["#26223d", "#493a58"],
+    pixelchef: ["#423329", "#73513a"]
   };
   const background = ctx.createLinearGradient(0, 0, gameWidth, gameHeight);
   background.addColorStop(0, gradients[currentGameId][0]);
@@ -402,6 +693,91 @@ function drawGame() {
     drawHud(ctx, `Ходы: ${state.attempts}`, `Найдено пар: ${state.matched.size / 2} / 8`);
   } else if (currentGameId === "tacstrike") {
     drawTacticalScene(ctx, state);
+  } else if (currentGameId === "bubblepop" || currentGameId === "meteorguard") {
+    state.objects.forEach((item) => {
+      ctx.fillStyle = currentGameId === "bubblepop" ? "#82e8f0" : "#ff8068";
+      ctx.shadowColor = ctx.fillStyle;
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "20px sans-serif";
+      ctx.fillText(currentGameId === "bubblepop" ? "○" : "☄", item.x, item.y + 7);
+    });
+    drawHud(ctx, currentGameId === "bubblepop" ? `Пузырьки: ${state.collected} / 15` : `Метеоры: ${state.collected} / 15`, `Ошибки: ${3 - state.lives}`);
+  } else if (currentGameId === "garden" || currentGameId === "pixelchef") {
+    ctx.fillStyle = currentGameId === "garden" ? "#416247" : "#594638";
+    ctx.fillRect(0, 440, gameWidth, 120);
+    ctx.fillStyle = "#a2cf70";
+    ctx.fillRect(state.playerX - 38, 476, 76, 28);
+    ctx.fillStyle = "#283a2f";
+    ctx.fillRect(state.playerX - 31, 482, 62, 18);
+    state.objects.forEach((item) => {
+      ctx.font = "29px sans-serif";
+      ctx.fillStyle = item.bad ? "#f47b74" : "#fff4cf";
+      ctx.fillText(currentGameId === "garden" && item.bad ? "✹" : item.ingredient, item.x, item.y + 10);
+    });
+    if (currentGameId === "garden") drawHud(ctx, `Яблоки: ${state.collected} / 12`, `Жизни: ${"♥".repeat(Math.max(0, state.lives))}`);
+    else drawHud(ctx, `Заказы: ${state.dishes} / 3`, `Рецепт: ${state.recipe.slice(state.recipeStep).join(" ")}`);
+  } else if (currentGameId === "skycourier" || currentGameId === "coral") {
+    for (let i = 0; i < 8; i += 1) {
+      ctx.globalAlpha = 0.16;
+      ctx.fillStyle = currentGameId === "skycourier" ? "#d9ebff" : "#72d9df";
+      ctx.beginPath();
+      ctx.ellipse((i * 147 + 40) % gameWidth, (i * 91 + 75) % gameHeight, 45, 18, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    state.objects.forEach((item) => {
+      ctx.fillStyle = item.bad ? "#ff786e" : "#f5e995";
+      ctx.font = "25px sans-serif";
+      ctx.fillText(item.icon, item.x, item.y + 8);
+    });
+    drawShip(ctx, state.playerX, state.playerY, currentGameId === "skycourier" ? "#f5e995" : "#8aebdd");
+    drawHud(ctx, currentGameId === "skycourier" ? `Посылки: ${state.collected} / 10` : `Жемчуг: ${state.collected} / 8`, `Жизни: ${"♥".repeat(Math.max(0, state.lives))}`);
+  } else if (currentGameId === "pulse") {
+    ctx.strokeStyle = "#b49beb";
+    ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(90, 280); ctx.lineTo(870, 280); ctx.stroke();
+    ctx.fillStyle = "#a7e86d66";
+    ctx.fillRect(state.targetX - 43, 235, 86, 90);
+    ctx.fillStyle = "#f3dc83";
+    ctx.shadowColor = "#f3dc83"; ctx.shadowBlur = 18;
+    ctx.beginPath(); ctx.arc(state.pulseX, 280, 18, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+    drawHud(ctx, `Попадания: ${state.hits} / 10`, `Промахи: ${state.misses} / 3`);
+  } else if (currentGameId === "maze") {
+    const size = 62, left = (gameWidth - size * 12) / 2, top = 62;
+    state.maze.forEach((row, y) => [...row].forEach((cell, x) => {
+      const px = left + x * size, py = top + y * size;
+      ctx.fillStyle = cell === "#" ? "#52646a" : "#243b40";
+      ctx.fillRect(px + 2, py + 2, size - 4, size - 4);
+      if (cell === "E") {
+        ctx.fillStyle = "#d6f583"; ctx.font = "30px sans-serif"; ctx.fillText("✦", px + size / 2, py + 43);
+      }
+      if (x === state.mazeX && y === state.mazeY) {
+        ctx.fillStyle = "#ffe67b"; ctx.shadowColor = "#ffe67b"; ctx.shadowBlur = 16;
+        ctx.beginPath(); ctx.arc(px + size / 2, py + size / 2, 15, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+      }
+    }));
+    drawHud(ctx, "Лабиринт светлячка", `Шаги: ${state.moves}`);
+  } else if (currentGameId === "tinytower") {
+    ctx.fillStyle = "#d1b184";
+    ctx.fillRect(130, 496, 700, 12);
+    state.blocks.forEach((block, index) => roundedRect(ctx, block.x, block.y, block.w, 34, 5, index % 2 ? "#efb96f" : "#f3d281"));
+    roundedRect(ctx, state.blockX, 485 - (state.layer + 1) * 35, state.blockWidth, 34, 5, "#a8e879");
+    drawHud(ctx, `Этажи: ${state.layer} / 10`, "Поставь блок точно");
+  } else if (currentGameId === "lantern") {
+    const colors = ["#fb786d", "#f2d46e", "#72d6a0", "#7eabfa"];
+    colors.forEach((color, index) => {
+      const x = 330 + (index % 2) * 165, y = 145 + Math.floor(index / 2) * 165;
+      roundedRect(ctx, x, y, 135, 135, 20, state.litPad === index ? "#ffffff" : color);
+      ctx.globalAlpha = state.litPad === index ? 1 : 0.72;
+      ctx.fillStyle = state.litPad === index ? color : "#ffffff";
+      ctx.beginPath(); ctx.arc(x + 67, y + 67, 29, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+    });
+    drawHud(ctx, `Раунд: ${state.round} / 5`, state.playerTurn ? "Твоя очередь" : "Запоминай последовательность");
   }
   if (state.ended) {
     ctx.fillStyle = "#080b16bb"; ctx.fillRect(0, 0, gameWidth, gameHeight);
@@ -439,6 +815,7 @@ function fireTacticalWeapon(state) {
   if (target) {
     target.alive = false;
     state.kills += 1;
+    state.levelKills += 1;
   }
 }
 
@@ -562,7 +939,7 @@ function drawTacticalScene(ctx, state) {
   ctx.fillText("ЗАДАНИЕ: ПРОРЫВ", 34, 68);
   ctx.fillStyle = "#c7d0c0";
   ctx.font = "12px 'DM Sans', sans-serif";
-  ctx.fillText(`Здоровье ${state.health}% · Боты ${state.kills}/4`, 34, 86);
+  ctx.fillText(`Уровень ${state.level}/10 · ${state.health}% · ${state.levelKills}/${state.targets.length}`, 34, 86);
   ctx.textAlign = "right";
   ctx.fillStyle = "#f1f0e6";
   ctx.font = "600 15px 'DM Sans', sans-serif";
@@ -572,6 +949,11 @@ function drawTacticalScene(ctx, state) {
     ctx.fillStyle = "#f2e0a8";
     ctx.font = "600 13px 'DM Sans', sans-serif";
     ctx.fillText("Перезарядка", gameWidth / 2, 38);
+  }
+  if (state.levelTransition > 0) {
+    ctx.fillStyle = "#f2e0a8";
+    ctx.font = "700 22px 'DM Sans', sans-serif";
+    ctx.fillText(`УРОВЕНЬ ${state.level} / 10`, gameWidth / 2, 120);
   }
 }
 
@@ -608,7 +990,11 @@ function runGameFrame(now) {
   document.querySelector("#game-score").textContent = currentGameId === "crystals"
     ? `Ходы: ${gameState.attempts} · Пары: ${gameState.matched.size / 2} / 8`
     : currentGameId === "tacstrike"
-      ? `Боты: ${gameState.kills} / 4 · ${gameState.ammo} / ${gameState.reserveAmmo}`
+      ? `Уровень ${gameState.level} / 10 · Всего ботов: ${gameState.kills} · ${gameState.ammo} / ${gameState.reserveAmmo}`
+      : currentGameId === "lantern"
+        ? `Раунд ${gameState.round} / 5 · Ошибки: ${3 - gameState.lives}`
+      : currentGameId === "maze"
+        ? `Шаги: ${gameState.moves}`
     : `Счёт: ${gameState.score}`;
   gameFrameId = requestAnimationFrame(runGameFrame);
 }
@@ -637,6 +1023,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) event.preventDefault();
   if (event.key === "Escape") document.querySelector("#game-dialog").close();
+  if (event.code === "Space" && !event.repeat && ["pulse", "tinytower"].includes(currentGameId)) handleGameAction();
   gameKeys.add(event.code);
 });
 document.addEventListener("keyup", (event) => gameKeys.delete(event.code));
@@ -648,28 +1035,58 @@ gameCanvas.addEventListener("pointerdown", (event) => {
     fireTacticalWeapon(gameState);
     return;
   }
-  if (currentGameId !== "crystals" && gameState && !gameState.ended) {
-    gameState.playerX = Math.max(35, Math.min(gameWidth - 35, point.x));
-    if (currentGameId === "moonhop" && gameState.grounded) {
-      gameState.playerVY = -610;
-      gameState.grounded = false;
+  if (!gameState || gameState.ended) return;
+  if (currentGameId === "bubblepop" || currentGameId === "meteorguard") {
+    const index = gameState.objects.findIndex((item) => Math.hypot(item.x - point.x, item.y - point.y) <= item.r + 12);
+    if (index >= 0) {
+      gameState.objects.splice(index, 1);
+      gameState.collected += 1;
+      gameState.score = gameState.collected * 10;
     }
     return;
   }
-  if (currentGameId !== "crystals" || !gameState || gameState.ended || gameState.lockTime > 0 || gameState.opened.length >= 2) return;
-  const column = Math.floor((point.x - 184) / 148);
-  const row = Math.floor((point.y - 54) / 114);
-  if (column < 0 || column > 3 || row < 0 || row > 3) return;
-  const index = row * 4 + column;
-  if (gameState.matched.has(index) || gameState.opened.includes(index)) return;
-  gameState.opened.push(index);
-  if (gameState.opened.length === 2) {
-    gameState.attempts += 1;
-    if (gameState.cards[gameState.opened[0]] === gameState.cards[gameState.opened[1]]) {
-      gameState.opened.forEach((cardIndex) => gameState.matched.add(cardIndex));
-      gameState.opened = [];
-    } else {
-      gameState.lockTime = 0.8;
+  if (currentGameId === "pulse" || currentGameId === "tinytower") {
+    handleGameAction();
+    return;
+  }
+  if (currentGameId === "lantern") {
+    const column = Math.floor((point.x - 330) / 165);
+    const row = Math.floor((point.y - 145) / 165);
+    if (column >= 0 && column < 2 && row >= 0 && row < 2) selectLanternPad(gameState, row * 2 + column);
+    return;
+  }
+  if (currentGameId === "maze") {
+    const size = 62, left = (gameWidth - size * 12) / 2, top = 62;
+    const targetX = Math.floor((point.x - left) / size), targetY = Math.floor((point.y - top) / size);
+    const dx = targetX - gameState.mazeX, dy = targetY - gameState.mazeY;
+    if (Math.abs(dx) + Math.abs(dy) === 1) moveMazePlayer(gameState, dx, dy);
+    return;
+  }
+  if (currentGameId === "crystals") {
+    if (gameState.lockTime > 0 || gameState.opened.length >= 2) return;
+    const column = Math.floor((point.x - 184) / 148);
+    const row = Math.floor((point.y - 54) / 114);
+    if (column < 0 || column > 3 || row < 0 || row > 3) return;
+    const index = row * 4 + column;
+    if (gameState.matched.has(index) || gameState.opened.includes(index)) return;
+    gameState.opened.push(index);
+    if (gameState.opened.length === 2) {
+      gameState.attempts += 1;
+      if (gameState.cards[gameState.opened[0]] === gameState.cards[gameState.opened[1]]) {
+        gameState.opened.forEach((cardIndex) => gameState.matched.add(cardIndex));
+        gameState.opened = [];
+      } else {
+        gameState.lockTime = 0.8;
+      }
+    }
+    return;
+  }
+  if (["starcatch", "neon", "moonhop", "garden", "pixelchef", "skycourier", "coral"].includes(currentGameId)) {
+    gameState.playerX = Math.max(35, Math.min(gameWidth - 35, point.x));
+    if (["skycourier", "coral"].includes(currentGameId)) gameState.playerY = Math.max(80, Math.min(500, point.y));
+    if (currentGameId === "moonhop" && gameState.grounded) {
+      gameState.playerVY = -610;
+      gameState.grounded = false;
     }
   }
 });
@@ -681,10 +1098,11 @@ gameCanvas.addEventListener("pointermove", (event) => {
     gameState.crosshairY = point.y;
     return;
   }
-  if (currentGameId === "crystals") return;
+  if (["crystals", "maze", "bubblepop", "meteorguard", "pulse", "tinytower", "lantern"].includes(currentGameId)) return;
   if (event.pointerType === "touch" || event.buttons === 1) {
     const point = canvasPoint(event);
     gameState.playerX = Math.max(35, Math.min(gameWidth - 35, point.x));
+    if (["skycourier", "coral"].includes(currentGameId)) gameState.playerY = Math.max(80, Math.min(500, point.y));
   }
 });
 

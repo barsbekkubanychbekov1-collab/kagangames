@@ -25,7 +25,7 @@ alter table public.analytics_events
   drop constraint if exists kagan_analytics_game_id_allowed;
 alter table public.analytics_events
   add constraint kagan_analytics_game_id_allowed
-  check (game_id in ('starcatch', 'neon', 'moonhop', 'crystals', 'tacstrike', 'orbit'));
+  check (game_id in ('starcatch', 'neon', 'moonhop', 'crystals', 'tacstrike', 'orbit', 'bubblepop', 'garden', 'skycourier', 'pulse', 'maze', 'tinytower', 'coral', 'meteorguard', 'lantern', 'pixelchef'));
 
 create table if not exists public.referral_participants (
   user_id uuid primary key references auth.users (id) on delete cascade,
@@ -179,7 +179,7 @@ begin
   if p_event_type is null or p_event_type not in ('login', 'game_start') then
     raise exception 'Unsupported event type';
   end if;
-  if p_event_type = 'game_start' and (p_game_id is null or p_game_id not in ('starcatch', 'neon', 'moonhop', 'crystals', 'tacstrike', 'orbit')) then
+  if p_event_type = 'game_start' and (p_game_id is null or p_game_id not in ('starcatch', 'neon', 'moonhop', 'crystals', 'tacstrike', 'orbit', 'bubblepop', 'garden', 'skycourier', 'pulse', 'maze', 'tinytower', 'coral', 'meteorguard', 'lantern', 'pixelchef')) then
     raise exception 'Unsupported game';
   end if;
   if p_event_type = 'login' and p_game_id is not null then
