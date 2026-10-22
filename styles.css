@@ -127,6 +127,15 @@ h1, h2, h3, p { margin-top: 0; }
 .game-description { min-height: 32px; margin: 7px 0; color: #aaa99f; font-size: 10px; line-height: 1.55; }
 .game-link { min-height: 32px; display: flex; margin-top: 9px; padding: 0 11px; font-size: 10px; }
 .game-link span { font-size: 11px; }
+.partner-banner { display: flex; align-items: center; gap: 17px; margin: 28px 0 18px; padding: 21px 22px; border: 1px solid #414335; border-radius: 10px; background: linear-gradient(112deg, #26291f, #1b1d19 76%); }
+.partner-mark { width: 43px; height: 43px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 11px; background: #d5f36a17; color: var(--lime); font-size: 22px; }
+.partner-copy { flex: 1; min-width: 0; }
+.partner-copy .eyebrow { margin-bottom: 7px; color: var(--lime); font-size: 9px; }
+.partner-copy h2 { max-width: 600px; margin: 0; font: 700 17px/1.35 Manrope, sans-serif; }
+.partner-copy p { max-width: 680px; margin: 6px 0 0; color: #aaa99f; font-size: 11px; line-height: 1.55; }
+.partner-note { display: block; margin-top: 7px; color: #818177; font-size: 9px; }
+.partner-contact { min-height: 39px; flex: 0 0 auto; padding: 0 13px; white-space: nowrap; }
+.partner-contact span { font-size: 14px; }
 .developer-banner { display: flex; align-items: center; gap: 16px; margin: 36px 0 37px; padding: 20px 23px; border: 1px solid #393a30; border-radius: 10px; background: linear-gradient(105deg, #282a20, #1b1c18 75%); }
 .banner-symbol { width: 45px; height: 45px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 12px; background: #d5f36a16; color: var(--lime); font-size: 24px; }
 .developer-banner > div:nth-child(2) { flex: 1; }
@@ -270,6 +279,9 @@ h1, h2, h3, p { margin-top: 0; }
   .developer-banner { align-items: flex-start; flex-wrap: wrap; }
   .developer-banner > div:nth-child(2) { min-width: calc(100% - 65px); }
   .developer-banner .button { margin-left: 61px; }
+  .partner-banner { align-items: flex-start; flex-wrap: wrap; }
+  .partner-copy { flex-basis: calc(100% - 62px); }
+  .partner-contact { margin-left: 60px; }
   .site-footer { flex-wrap: wrap; justify-content: space-between; padding: 14px 0; }
   .site-footer > span { order: 3; width: 100%; }
   .game-dialog { padding: 14px; }
@@ -306,6 +318,11 @@ h1, h2, h3, p { margin-top: 0; }
   .game-card-title { font-size: 11px; }
   .game-card-meta { font-size: 9px; }
   .section-heading h2 { font-size: 18px; }
+  .partner-banner { gap: 10px; padding: 14px; }
+  .partner-mark { width: 34px; height: 34px; }
+  .partner-copy { flex-basis: calc(100% - 44px); }
+  .partner-copy h2 { font-size: 14px; }
+  .partner-contact { min-height: 34px; margin-left: 44px; }
   .text-link { font-size: 9px; }
   .ranking-row { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 8px; padding: 9px; }
   .rank-avatar { width: 34px; height: 34px; }
