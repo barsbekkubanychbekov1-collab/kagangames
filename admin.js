@@ -25,6 +25,7 @@ function displayGameLabel(gameId) {
     neon: "Неоновые гонки",
     moonhop: "Лунный прыжок",
     crystals: "Кристальная память",
+    tacstrike: "Тактический прорыв",
     orbit: "Защитник орбиты"
   })[gameId] || "—";
 }

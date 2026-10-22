@@ -3,7 +3,7 @@ const games = [
   { id: "neon", title: "Неоновые гонки", genre: "Гонки", studio: "Kagan Games", initials: "02", art: "neon", tag: "НЕ СТОЛКНИСЬ", description: "Мчись по неоновой трассе и маневрируй между препятствиями.", controls: "← → / A-D или веди пальцем по полю" },
   { id: "moonhop", title: "Лунный прыжок", genre: "Платформер", studio: "Kagan Games", initials: "03", art: "moonhop", tag: "ВЫШЕ К ЗВЁЗДАМ", description: "Прыгай по платформам всё выше и не падай в бездну.", controls: "← → и Пробел — прыгать; на телефоне коснись поля" },
   { id: "crystals", title: "Кристальная память", genre: "Головоломка", studio: "Kagan Games", initials: "04", art: "crystals", tag: "НАЙДИ ПАРЫ", description: "Открывай кристаллы и собирай одинаковые пары.", controls: "Нажимай на кристаллы мышью или пальцем" },
-  { id: "orbit", title: "Защитник орбиты", genre: "Экшен", studio: "Kagan Games", initials: "05", art: "orbit", tag: "ЗАЩИТИ ОРБИТУ", description: "Отбивайся от дронов и не дай им прорваться.", controls: "← → и Пробел — стрелять; на телефоне веди пальцем и касайся поля" }
+  { id: "tacstrike", title: "Тактический прорыв", genre: "Тактический шутер", studio: "Kagan Games", initials: "05", art: "tactical", tag: "ЗАДАНИЕ: ПРОРЫВ", description: "Оригинальный одиночный тактический шутер: целься, перезаряжайся и останови волну ботов.", controls: "Мышь — цель и огонь · WASD — движение · R — перезарядка · на телефоне веди и касайся поля" }
 ];
 
 const rankings = {
@@ -41,7 +41,7 @@ const gameHeight = gameCanvas.height;
 function gameCard(game) {
   return `<article class="game-card">
     <div class="game-cover game-cover-${game.art}">
-      <span class="cover-tag">${game.tag}</span><span class="cover-symbol" aria-hidden="true">${{ starcatch: "✦", neon: "↗", moonhop: "☾", crystals: "◇", orbit: "✹" }[game.art]}</span><span class="cover-initials">${game.initials}</span>
+      <span class="cover-tag">${game.tag}</span><span class="cover-symbol" aria-hidden="true">${{ starcatch: "✦", neon: "↗", moonhop: "☾", crystals: "◇", orbit: "✹", tactical: "⌖" }[game.art]}</span><span class="cover-initials">${game.initials}</span>
     </div>
     <div class="game-card-info">
       <h3 class="game-card-title">${game.title}</h3>
@@ -190,6 +190,25 @@ function startGame(id) {
       x: 90 + Math.random() * 720, y: 410 - index * 75, w: 100 + Math.random() * 45
     }))];
   }
+  if (id === "tacstrike") {
+    gameState.health = 100;
+    gameState.ammo = 12;
+    gameState.reserveAmmo = 36;
+    gameState.kills = 0;
+    gameState.reloadTime = 0;
+    gameState.attackTime = 2.6;
+    gameState.muzzleTime = 0;
+    gameState.cameraX = 0;
+    gameState.cameraY = 0;
+    gameState.crosshairX = gameWidth / 2;
+    gameState.crosshairY = gameHeight / 2;
+    gameState.targets = Array.from({ length: 4 }, (_, index) => ({
+      x: 280 + index * 135 + Math.random() * 35,
+      y: 215 + Math.random() * 65,
+      phase: Math.random() * Math.PI * 2,
+      alive: true
+    }));
+  }
   if (id === "crystals") {
     const icons = ["✦", "◆", "☾", "●", "❋", "⬟", "✧", "⬢"];
     gameState.cards = [...icons, ...icons].sort(() => Math.random() - 0.5);
@@ -197,7 +216,7 @@ function startGame(id) {
   document.querySelector("#game-dialog-title").textContent = game.title;
   document.querySelector("#game-dialog-description").textContent = game.description;
   document.querySelector("#game-controls").textContent = game.controls;
-  document.querySelector("#game-score").textContent = id === "crystals" ? "Ходы: 0" : "Счёт: 0";
+  document.querySelector("#game-score").textContent = id === "crystals" ? "Ходы: 0" : id === "tacstrike" ? "Боты: 0 / 4" : "Счёт: 0";
   const dialog = document.querySelector("#game-dialog");
   if (!dialog.open) dialog.showModal();
   gameKeys.clear();
@@ -288,39 +307,36 @@ function updateGame(delta) {
       }
     }
     if (state.playerY > gameHeight + 30) endGame("Прыжок не удался. Попробуй снова!");
-  } else if (currentGameId === "orbit") {
-    state.playerX = Math.max(48, Math.min(gameWidth - 48, state.playerX + (Number(movingRight) - Number(movingLeft)) * 390 * delta));
-    state.spawn += delta;
-    if (state.spawn > 0.75) {
-      state.spawn = 0;
-      state.objects.push({ x: 45 + Math.random() * (gameWidth - 90), y: -20, speed: 105 + Math.random() * 100 });
-    }
-    if (gameKeys.has("Space")) {
-      state.fireDelay = (state.fireDelay || 0) - delta;
-      if (state.fireDelay <= 0) {
-        state.bullets.push({ x: state.playerX, y: 465 });
-        state.fireDelay = 0.22;
+  } else if (currentGameId === "tacstrike") {
+    const movingForward = gameKeys.has("KeyW") || gameKeys.has("ArrowUp");
+    const movingBackward = gameKeys.has("KeyS") || gameKeys.has("ArrowDown");
+    state.cameraX += (Number(movingRight) - Number(movingLeft)) * 175 * delta;
+    state.cameraX = Math.max(-115, Math.min(115, state.cameraX));
+    state.cameraY += (Number(movingBackward) - Number(movingForward)) * 110 * delta;
+    state.cameraY = Math.max(-70, Math.min(70, state.cameraY));
+    if (gameKeys.has("Space")) fireTacticalWeapon(state);
+    if (state.fireCooldown > 0) state.fireCooldown -= delta;
+    if (state.reloadTime > 0) {
+      state.reloadTime -= delta;
+      if (state.reloadTime <= 0) {
+        const loaded = Math.min(12, state.reserveAmmo);
+        state.ammo = loaded;
+        state.reserveAmmo -= loaded;
       }
     }
-    state.bullets = state.bullets.filter((bullet) => {
-      bullet.y -= 450 * delta;
-      return bullet.y > -10;
+    state.muzzleTime = Math.max(0, state.muzzleTime - delta);
+    state.attackTime -= delta;
+    if (state.attackTime <= 0 && state.targets.some((target) => target.alive)) {
+      state.health = Math.max(0, state.health - 8);
+      state.attackTime = 2.1 + Math.random() * 1.2;
+      if (state.health <= 0) endGame(`Задание провалено. Ты остановил ${state.kills} из 4 ботов.`);
+    }
+    state.targets.forEach((target) => {
+      if (!target.alive) return;
+      target.phase += delta * 1.7;
+      target.x += Math.sin(target.phase) * 24 * delta;
     });
-    state.objects = state.objects.filter((enemy) => {
-      enemy.y += enemy.speed * delta;
-      const hitIndex = state.bullets.findIndex((bullet) => Math.abs(bullet.x - enemy.x) < 25 && Math.abs(bullet.y - enemy.y) < 25);
-      if (hitIndex !== -1) {
-        state.bullets.splice(hitIndex, 1);
-        state.score += 10;
-        return false;
-      }
-      if (enemy.y > 505) {
-        state.lives -= 1;
-        if (state.lives <= 0) endGame("Орбита потеряна. Попробуй ещё раз.");
-        return false;
-      }
-      return true;
-    });
+    if (state.kills === state.targets.length) endGame("Задание выполнено! Район зачищен.");
   }
   if (currentGameId === "crystals" && state.matched.size === 16) {
     endGame(`Все пары собраны за ${state.attempts} ходов!`);
@@ -333,7 +349,8 @@ function drawGame() {
   if (!state) return;
   const gradients = {
     starcatch: ["#102132", "#253358"], neon: ["#15122e", "#32194b"],
-    moonhop: ["#17223a", "#3d4167"], crystals: ["#18253a", "#34294e"], orbit: ["#101b2b", "#20294d"]
+    moonhop: ["#17223a", "#3d4167"], crystals: ["#18253a", "#34294e"],
+    tacstrike: ["#263c3c", "#1b2425"]
   };
   const background = ctx.createLinearGradient(0, 0, gameWidth, gameHeight);
   background.addColorStop(0, gradients[currentGameId][0]);
@@ -383,16 +400,8 @@ function drawGame() {
       ctx.fillText(revealed ? icon : "✧", x + cardW / 2, y + cardH / 2 + 13);
     });
     drawHud(ctx, `Ходы: ${state.attempts}`, `Найдено пар: ${state.matched.size / 2} / 8`);
-  } else if (currentGameId === "orbit") {
-    ctx.strokeStyle = "#566493"; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(480, 330, 230, 80, 0, 0, Math.PI * 2); ctx.stroke();
-    state.bullets.forEach((bullet) => { ctx.fillStyle = "#d5f36a"; ctx.fillRect(bullet.x - 3, bullet.y - 12, 6, 18); });
-    state.objects.forEach((enemy) => {
-      ctx.fillStyle = "#ff788e"; ctx.shadowColor = "#ff788e"; ctx.shadowBlur = 14;
-      ctx.beginPath(); ctx.arc(enemy.x, enemy.y, 17, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-      ctx.fillStyle = "#342143"; ctx.font = "18px sans-serif"; ctx.fillText("✹", enemy.x, enemy.y + 6);
-    });
-    drawShip(ctx, state.playerX, 490, "#83d7ff");
-    drawHud(ctx, `Счёт: ${state.score}`, `Щиты: ${"♥".repeat(Math.max(0, state.lives))}  ·  Пробел — огонь`);
+  } else if (currentGameId === "tacstrike") {
+    drawTacticalScene(ctx, state);
   }
   if (state.ended) {
     ctx.fillStyle = "#080b16bb"; ctx.fillRect(0, 0, gameWidth, gameHeight);
@@ -407,6 +416,163 @@ function roundedRect(ctx, x, y, width, height, radius, fill) {
   ctx.beginPath();
   ctx.roundRect(x, y, width, height, radius);
   ctx.fill();
+}
+
+function fireTacticalWeapon(state) {
+  if (state.fireCooldown > 0 || state.reloadTime > 0 || state.ended) return;
+  if (state.ammo <= 0) {
+    startTacticalReload(state);
+    return;
+  }
+  state.ammo -= 1;
+  state.fireCooldown = 0.22;
+  state.muzzleTime = 0.08;
+  const target = state.targets.find((enemy) => {
+    if (!enemy.alive) return false;
+    const enemyX = enemy.x - state.cameraX;
+    const targetY = enemy.y + state.cameraY;
+    const bodyTop = targetY - 66;
+    const bodyBottom = targetY + 28;
+    return Math.abs(state.crosshairX - enemyX) < 40 &&
+      state.crosshairY >= bodyTop && state.crosshairY <= bodyBottom;
+  });
+  if (target) {
+    target.alive = false;
+    state.kills += 1;
+  }
+}
+
+function startTacticalReload(state) {
+  if (state.reloadTime > 0 || state.ammo === 12 || state.reserveAmmo === 0) return;
+  state.reloadTime = 1.1;
+}
+
+function drawTacticalScene(ctx, state) {
+  const sky = ctx.createLinearGradient(0, 0, 0, 365);
+  sky.addColorStop(0, "#a5b2a1");
+  sky.addColorStop(1, "#536d65");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, gameWidth, 365);
+
+  ctx.fillStyle = "#d0c7ad";
+  ctx.fillRect(0, 244, gameWidth, 110);
+  for (let x = 35; x < gameWidth; x += 112) {
+    const shift = Math.sin(state.elapsed * 0.22 + x) * 3;
+    ctx.fillStyle = x % 2 ? "#65716b" : "#786f5c";
+    ctx.fillRect(x - state.cameraX * 0.22 + shift, 145, 72, 128);
+    ctx.fillStyle = "#9a967f";
+    ctx.fillRect(x + 10 - state.cameraX * 0.22 + shift, 163, 15, 23);
+    ctx.fillRect(x + 43 - state.cameraX * 0.22 + shift, 163, 15, 23);
+    ctx.fillStyle = "#3d514e";
+    ctx.fillRect(x + 10 - state.cameraX * 0.22 + shift, 205, 50, 42);
+  }
+
+  const ground = ctx.createLinearGradient(0, 275, 0, gameHeight);
+  ground.addColorStop(0, "#8d8a72");
+  ground.addColorStop(1, "#373d37");
+  ctx.fillStyle = ground;
+  ctx.beginPath();
+  ctx.moveTo(0, 287);
+  ctx.lineTo(gameWidth, 287);
+  ctx.lineTo(gameWidth, gameHeight);
+  ctx.lineTo(0, gameHeight);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = "#c3b38b";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, 288);
+  ctx.lineTo(gameWidth, 288);
+  ctx.stroke();
+
+  state.targets.forEach((target) => {
+    if (!target.alive) return;
+    const x = target.x - state.cameraX;
+    const y = target.y + state.cameraY;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#232a28";
+    ctx.beginPath();
+    ctx.ellipse(0, 2, 21, 11, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#394944";
+    ctx.fillRect(-13, -42, 26, 48);
+    ctx.fillStyle = "#b6a98e";
+    ctx.beginPath();
+    ctx.arc(0, -51, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#202a28";
+    ctx.fillRect(-12, -56, 24, 7);
+    ctx.fillRect(-9, -67, 18, 12);
+    ctx.fillStyle = "#252d2b";
+    ctx.fillRect(-20, -37, 8, 28);
+    ctx.fillRect(12, -37, 8, 28);
+    ctx.fillStyle = "#141b1b";
+    ctx.fillRect(-10, 6, 8, 23);
+    ctx.fillRect(2, 6, 8, 23);
+    ctx.restore();
+  });
+
+  ctx.fillStyle = "#202724";
+  ctx.beginPath();
+  ctx.moveTo(372, 560);
+  ctx.lineTo(421, 460);
+  ctx.lineTo(541, 460);
+  ctx.lineTo(590, 560);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "#48534c";
+  ctx.fillRect(438, 468, 84, 22);
+  ctx.fillStyle = "#8a9b85";
+  ctx.fillRect(456, 472, 48, 4);
+
+  if (state.muzzleTime > 0) {
+    ctx.fillStyle = "#ffd987";
+    ctx.beginPath();
+    ctx.moveTo(480, 472);
+    ctx.lineTo(464, 434);
+    ctx.lineTo(480, 443);
+    ctx.lineTo(496, 434);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.strokeStyle = "#e9f4e5";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(state.crosshairX - 13, state.crosshairY);
+  ctx.lineTo(state.crosshairX - 4, state.crosshairY);
+  ctx.moveTo(state.crosshairX + 4, state.crosshairY);
+  ctx.lineTo(state.crosshairX + 13, state.crosshairY);
+  ctx.moveTo(state.crosshairX, state.crosshairY - 13);
+  ctx.lineTo(state.crosshairX, state.crosshairY - 4);
+  ctx.moveTo(state.crosshairX, state.crosshairY + 4);
+  ctx.lineTo(state.crosshairX, state.crosshairY + 13);
+  ctx.stroke();
+  ctx.fillStyle = "#e9f4e5";
+  ctx.beginPath();
+  ctx.arc(state.crosshairX, state.crosshairY, 1.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  roundedRect(ctx, 22, 48, 170, 47, 7, "#101716bb");
+  ctx.fillStyle = "#f1f0e6";
+  ctx.textAlign = "left";
+  ctx.font = "600 15px 'DM Sans', sans-serif";
+  ctx.fillText("ЗАДАНИЕ: ПРОРЫВ", 34, 68);
+  ctx.fillStyle = "#c7d0c0";
+  ctx.font = "12px 'DM Sans', sans-serif";
+  ctx.fillText(`Здоровье ${state.health}% · Боты ${state.kills}/4`, 34, 86);
+  ctx.textAlign = "right";
+  ctx.fillStyle = "#f1f0e6";
+  ctx.font = "600 15px 'DM Sans', sans-serif";
+  ctx.fillText(state.reloadTime > 0 ? "ПЕРЕЗАРЯДКА…" : `${state.ammo} / ${state.reserveAmmo}`, gameWidth - 25, 67);
+  ctx.textAlign = "center";
+  if (state.reloadTime > 0) {
+    ctx.fillStyle = "#f2e0a8";
+    ctx.font = "600 13px 'DM Sans', sans-serif";
+    ctx.fillText("Перезарядка", gameWidth / 2, 38);
+  }
 }
 
 function drawShip(ctx, x, y, color) {
@@ -441,6 +607,8 @@ function runGameFrame(now) {
   drawGame();
   document.querySelector("#game-score").textContent = currentGameId === "crystals"
     ? `Ходы: ${gameState.attempts} · Пары: ${gameState.matched.size / 2} / 8`
+    : currentGameId === "tacstrike"
+      ? `Боты: ${gameState.kills} / 4 · ${gameState.ammo} / ${gameState.reserveAmmo}`
     : `Счёт: ${gameState.score}`;
   gameFrameId = requestAnimationFrame(runGameFrame);
 }
@@ -463,6 +631,10 @@ document.querySelector("#game-dialog").addEventListener("close", () => {
 });
 document.addEventListener("keydown", (event) => {
   if (!document.querySelector("#game-dialog").open) return;
+  if (currentGameId === "tacstrike" && event.code === "KeyR" && gameState) {
+    event.preventDefault();
+    startTacticalReload(gameState);
+  }
   if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) event.preventDefault();
   if (event.key === "Escape") document.querySelector("#game-dialog").close();
   gameKeys.add(event.code);
@@ -470,13 +642,18 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => gameKeys.delete(event.code));
 gameCanvas.addEventListener("pointerdown", (event) => {
   const point = canvasPoint(event);
+  if (currentGameId === "tacstrike" && gameState && !gameState.ended) {
+    gameState.crosshairX = point.x;
+    gameState.crosshairY = point.y;
+    fireTacticalWeapon(gameState);
+    return;
+  }
   if (currentGameId !== "crystals" && gameState && !gameState.ended) {
     gameState.playerX = Math.max(35, Math.min(gameWidth - 35, point.x));
     if (currentGameId === "moonhop" && gameState.grounded) {
       gameState.playerVY = -610;
       gameState.grounded = false;
     }
-    if (currentGameId === "orbit") gameState.bullets.push({ x: gameState.playerX, y: 465 });
     return;
   }
   if (currentGameId !== "crystals" || !gameState || gameState.ended || gameState.lockTime > 0 || gameState.opened.length >= 2) return;
@@ -497,7 +674,14 @@ gameCanvas.addEventListener("pointerdown", (event) => {
   }
 });
 gameCanvas.addEventListener("pointermove", (event) => {
-  if (currentGameId === "crystals" || !gameState || gameState.ended) return;
+  if (!gameState || gameState.ended) return;
+  if (currentGameId === "tacstrike") {
+    const point = canvasPoint(event);
+    gameState.crosshairX = point.x;
+    gameState.crosshairY = point.y;
+    return;
+  }
+  if (currentGameId === "crystals") return;
   if (event.pointerType === "touch" || event.buttons === 1) {
     const point = canvasPoint(event);
     gameState.playerX = Math.max(35, Math.min(gameWidth - 35, point.x));

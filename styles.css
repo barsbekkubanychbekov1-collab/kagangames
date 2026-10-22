@@ -114,6 +114,7 @@ h1, h2, h3, p { margin-top: 0; }
 .game-cover-moonhop { background: radial-gradient(ellipse at 70% 25%, #fff1a5 0 8%, transparent 9%), radial-gradient(ellipse at 70% 25%, #aca3eb 0 18%, transparent 19%), linear-gradient(145deg, #4f568f, #343b72 47%, #1e2546); }
 .game-cover-crystals { background: radial-gradient(ellipse at 70% 25%, #d2fffc 0 6%, transparent 7%), radial-gradient(ellipse at 70% 25%, #70d6db 0 18%, transparent 19%), linear-gradient(145deg, #317b92, #344c85 47%, #242b58); }
 .game-cover-orbit { background: radial-gradient(ellipse at 70% 25%, #ffd194 0 5%, transparent 6%), radial-gradient(ellipse at 70% 25%, #ff766e 0 17%, transparent 18%), linear-gradient(145deg, #8a4757, #55396f 47%, #252547); }
+.game-cover-tactical { background: radial-gradient(ellipse at 68% 35%, #b6c8a2 0 5%, transparent 6%), radial-gradient(ellipse at 68% 35%, #586a53 0 20%, transparent 21%), linear-gradient(145deg, #687965, #3c5148 47%, #252d2b); }
 .game-cover::before, .game-cover::after { content: ""; position: absolute; border-radius: 50%; }
 .game-cover::before { z-index: -1; width: 160px; height: 160px; right: -28px; top: -46px; border: 1px solid #ffffff55; box-shadow: 0 0 0 14px #ffffff0b, 0 0 0 30px #ffffff08; }
 .game-cover::after { z-index: -1; width: 120px; height: 25px; left: 15%; bottom: 18px; border-top: 2px solid #ffffff75; border-radius: 50%; transform: rotate(-15deg); filter: drop-shadow(0 0 9px #ffffff8a); }
