@@ -94,7 +94,7 @@ function renderRankings(type = "games") {
 }
 
 function navigate(page) {
-  const validPage = ["home", "catalog", "rankings", "developers", "admin"].includes(page) ? page : "home";
+  const validPage = ["home", "catalog", "rankings", "developers"].includes(page) ? page : "home";
   document.querySelectorAll(".page-section").forEach((section) => section.classList.toggle("active", section.id === `page-${validPage}`));
   document.querySelectorAll(".nav-link").forEach((link) => link.classList.toggle("active", link.dataset.page === validPage));
   if (validPage === "catalog") renderGames();
@@ -476,7 +476,7 @@ document.querySelectorAll("[data-page]").forEach((link) => link.addEventListener
   history.replaceState(null, "", `#${link.dataset.page}`);
 }));
 
-document.querySelectorAll('a[href="#home"], a[href="#catalog"], a[href="#rankings"], a[href="#developers"], a[href="#admin"]').forEach((link) => {
+document.querySelectorAll('a[href="#home"], a[href="#catalog"], a[href="#rankings"], a[href="#developers"]').forEach((link) => {
   if (link.dataset.page) return;
   link.addEventListener("click", (event) => {
     event.preventDefault();
