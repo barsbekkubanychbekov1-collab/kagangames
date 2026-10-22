@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#11110f" />
+    <meta
+      name="description"
+      content="Kagan Games — каталог собственных мини-игр, в которые можно играть прямо на сайте."
+    />
+    <title>Kagan Games — игры, которые хочется проходить</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Главная навигация">
+        <a class="brand" href="#home" aria-label="Kagan Games — главная">
+          <span class="brand-mark" aria-hidden="true">K</span>
+          <span>KAGAN<span class="brand-light">GAMES</span></span>
+        </a>
+
+        <div class="side-label">МЕНЮ</div>
+        <nav class="side-nav">
+          <a class="nav-link active" href="#home" data-page="home">
+            <span class="nav-icon">⌂</span> Главная
+          </a>
+          <a class="nav-link" href="#catalog" data-page="catalog">
+            <span class="nav-icon">▦</span> Каталог игр
+          </a>
+          <a class="nav-link" href="#rankings" data-page="rankings">
+            <span class="nav-icon">↗</span> Наши игры
+          </a>
+          <a class="nav-link" href="#developers" data-page="developers">
+            <span class="nav-icon">✳</span> Разработчикам
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="side-label">ТВОЙ АККАУНТ</div>
+          <p class="sidebar-note">Войди, чтобы сохранять любимые игры и следить за новинками.</p>
+          <button class="button button-sidebar" data-open-auth>Войти в аккаунт</button>
+          <div class="sidebar-footer">© 2026 Kagan Games</div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand">
+            <span class="brand-mark" aria-hidden="true">K</span>
+            <span>KAGAN<span class="brand-light">GAMES</span></span>
+          </div>
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="global-search" type="search" placeholder="Найти игру..." autocomplete="off" />
+            <kbd>/</kbd>
+          </label>
+          <div class="topbar-actions">
+            <button class="button button-quiet" data-open-auth id="account-button">Войти</button>
+            <button class="button button-primary" data-open-auth>Создать аккаунт <span>↗</span></button>
+          </div>
+        </header>
+        <div class="privacy-banner" role="note">
+          <span aria-hidden="true">ⓘ</span>
+          <p><strong>Приватность:</strong> этот прототип не записывает игры, регистрации или время входа. Статистика в макете админ-панели вымышленная.</p>
+          <a href="#admin" data-page="admin">Макет админ-панели</a>
+        </div>
+
+        <section class="page-section active" id="page-home" aria-labelledby="hero-title">
+          <div class="hero">
+            <div class="hero-copy">
+              <div class="eyebrow"><span class="live-dot"></span> СОБСТВЕННЫЕ ИГРЫ KAGAN GAMES</div>
+              <h1 id="hero-title">Игры, которые<br />хочется <span>проходить.</span></h1>
+              <p>Пять оригинальных мини-игр Kagan Games. Выбирай игру и запускай прямо здесь, не покидая сайт.</p>
+              <div class="hero-actions">
+                <a class="button button-primary button-large" href="#catalog">Смотреть игры <span>→</span></a>
+                <a class="button button-outline button-large" href="#developers">Я разработчик</a>
+              </div>
+              <div class="hero-stats">
+                <div><strong>5</strong><span>игр в подборке</span></div>
+                <i></i>
+                <div><strong>Здесь</strong><span>запуск в браузере</span></div>
+                <i></i>
+                <div><strong>0</strong><span>установок нужно</span></div>
+              </div>
+              <p class="demo-note">Все игры в подборке созданы для Kagan Games и работают в браузере.</p>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <div class="art-glow"></div>
+              <div class="art-sun"></div>
+              <div class="art-orbit orbit-one"></div>
+              <div class="art-orbit orbit-two"></div>
+              <div class="art-card card-back">✦</div>
+              <div class="art-card card-front"><span>KG</span><b>PLAY<br />YOUR<br />WAY</b></div>
+              <div class="art-caption">НАЙДИ СВОЮ СЛЕДУЮЩУЮ ИГРУ <span>↗</span></div>
+            </div>
+          </div>
+
+          <div class="section-heading">
+            <div><div class="eyebrow">СОЗДАНО ДЛЯ KAGAN GAMES</div><h2>Наши игры</h2></div>
+            <a class="text-link" href="#catalog">Весь каталог <span>→</span></a>
+          </div>
+          <div class="game-grid" id="featured-games"></div>
+
+          <div class="developer-banner">
+            <div class="banner-symbol" aria-hidden="true">✳</div>
+            <div>
+              <div class="eyebrow">ТВОЙ ПРОЕКТ ЗАСЛУЖИВАЕТ ВНИМАНИЯ</div>
+              <h2>Создаёшь игру? Покажи её миру.</h2>
+              <p>Добавь игру в каталог Kagan Games и найди свою аудиторию.</p>
+            </div>
+            <a class="button button-dark" href="#developers">Добавить игру <span>→</span></a>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-catalog" aria-labelledby="catalog-title">
+          <div class="page-intro">
+            <div class="eyebrow">ИССЛЕДУЙ ИГРЫ</div>
+            <h1 id="catalog-title">Каталог <span>игр.</span></h1>
+            <p>Оригинальные браузерные мини-игры Kagan Games — нажми «Играть», чтобы начать.</p>
+            <p class="demo-note">Игры запускаются прямо на этой странице и не требуют установки.</p>
+          </div>
+          <div class="catalog-toolbar">
+            <div class="filter-list" id="genre-filters" aria-label="Фильтр по жанру"></div>
+            <span class="result-count" id="catalog-count"></span>
+          </div>
+          <div class="game-grid" id="catalog-games"></div>
+          <div class="empty-state" id="empty-games" hidden>Ничего не нашлось. Попробуй другой запрос или жанр.</div>
+        </section>
+
+        <section class="page-section" id="page-rankings" aria-labelledby="rankings-title">
+          <div class="page-intro">
+            <div class="eyebrow">СОБСТВЕННЫЕ ПРОЕКТЫ</div>
+            <h1 id="rankings-title">Вселенная <span>Kagan.</span></h1>
+            <p>Все пять игр в каталоге — оригинальные браузерные мини-игры Kagan Games, запускаются прямо на сайте.</p>
+          </div>
+          <div class="ranking-tabs" role="tablist" aria-label="Игры и авторы">
+            <button class="ranking-tab active" data-ranking="games" role="tab" aria-selected="true">Игры</button>
+            <button class="ranking-tab" data-ranking="developers" role="tab" aria-selected="false">Авторы</button>
+            <button class="ranking-tab" data-ranking="studios" role="tab" aria-selected="false">Студии игр</button>
+          </div>
+          <div class="ranking-list" id="ranking-list"></div>
+        </section>
+
+        <section class="page-section" id="page-developers" aria-labelledby="developers-title">
+          <div class="page-intro developer-intro">
+            <div class="eyebrow"><span class="live-dot"></span> KAGAN GAMES ДЛЯ СОЗДАТЕЛЕЙ</div>
+            <h1 id="developers-title">Твоя игра.<br /><span>Твоя аудитория.</span></h1>
+            <p>Предложи свою игру для каталога Kagan Games — после проверки она может стать частью подборки.</p>
+          </div>
+          <div class="developer-layout">
+            <div class="submit-card">
+              <div class="eyebrow">КАК ДОБАВИТЬ ИГРУ</div>
+              <h2>Отправь проект на рассмотрение</h2>
+              <ol class="steps-list">
+                <li><span>01</span><div><b>Подготовь материалы</b><p>Название игры, короткое описание, жанр и ссылку на страницу игры или файл.</p></div></li>
+                <li><span>02</span><div><b>Напиши нам</b><p>Отправь материалы команде Kagan Games в мессенджер.</p></div></li>
+                <li><span>03</span><div><b>Дождись ответа</b><p>Команда свяжется с тобой и расскажет о дальнейших шагах.</p></div></li>
+              </ol>
+              <a class="button button-primary button-large contact-button" href="https://wa.me/996509955908" target="_blank" rel="noopener noreferrer">
+                Написать +996 509 955 908 <span>↗</span>
+              </a>
+              <p class="contact-note">Ссылка откроет WhatsApp, если он установлен. Не отправляй пароли или личные документы.</p>
+            </div>
+            <aside class="developer-aside">
+              <div class="aside-icon">✦</div>
+              <h3>Что приложить?</h3>
+              <ul>
+                <li>Название и описание игры</li>
+                <li>Скриншоты или короткий трейлер</li>
+                <li>Ссылку на игру или сборку</li>
+                <li>Имя разработчика или студии</li>
+              </ul>
+              <div class="aside-divider"></div>
+              <p>Добавление игры проходит через модерацию. Публикация не гарантируется.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-admin" aria-labelledby="admin-title">
+          <div class="page-intro">
+            <div class="eyebrow">ТОЛЬКО ДЕМО-ДАННЫЕ</div>
+            <h1 id="admin-title">Макет <span>админ-панели.</span></h1>
+            <p>Пример того, как могла бы выглядеть статистика активности после подключения серверной части.</p>
+          </div>
+          <div class="admin-warning" role="alert">
+            <strong>Это не защищённая панель и не реальные данные.</strong>
+            <span>Сейчас сайт статический: входы и игровые действия не отправляются и нигде не сохраняются. Не публикуй этот макет как рабочую админку.</span>
+          </div>
+          <div class="admin-stats">
+            <article class="admin-stat"><span>Демо-регистрации</span><strong>128</strong><small>пример за всё время</small></article>
+            <article class="admin-stat"><span>Демо-входы сегодня</span><strong>36</strong><small>пример активности</small></article>
+            <article class="admin-stat"><span>Демо-запуски игр</span><strong>342</strong><small>пример событий</small></article>
+          </div>
+          <div class="admin-table-wrap">
+            <div class="admin-table-heading"><h2>Пример журнала активности</h2><span>все записи вымышлены</span></div>
+            <table class="admin-table">
+              <thead><tr><th>Пользователь</th><th>Регистрация</th><th>Последний вход</th><th>Игра</th><th>Событие</th></tr></thead>
+              <tbody>
+                <tr><td>demo-player-01</td><td>14.10.2026, 09:15</td><td>14.10.2026, 17:02</td><td>Звёздный ловец</td><td><span class="event-badge">Запуск игры</span></td></tr>
+                <tr><td>demo-player-02</td><td>13.10.2026, 18:40</td><td>14.10.2026, 16:48</td><td>Лунный прыжок</td><td><span class="event-badge">Запуск игры</span></td></tr>
+                <tr><td>demo-player-03</td><td>12.10.2026, 12:06</td><td>14.10.2026, 15:31</td><td>—</td><td><span class="event-badge event-badge-muted">Вход</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="admin-next-step">Чтобы превратить макет в настоящую панель, понадобятся сервер и база данных, защищённая авторизация администратора, уведомление пользователей и правила хранения/удаления данных. Телефон может быть контактом, но не сервером для хранения этих журналов.</p>
+        </section>
+
+        <footer class="site-footer">
+          <a class="brand footer-brand" href="#home"><span class="brand-mark">K</span><span>KAGAN<span class="brand-light">GAMES</span></span></a>
+          <span>Игры создают люди. Мы помогаем им встретиться.</span>
+          <a href="#developers">Для разработчиков ↗</a>
+          <a href="#admin" data-page="admin">Админ-макет</a>
+        </footer>
+      </main>
+    </div>
+
+    <dialog class="game-dialog" id="game-dialog" aria-labelledby="game-dialog-title">
+      <div class="game-dialog-header">
+        <div><div class="eyebrow">ИГРА KAGAN GAMES</div><h2 id="game-dialog-title"></h2></div>
+        <button class="dialog-close" id="close-game" type="button" aria-label="Закрыть игру">×</button>
+      </div>
+      <p class="game-dialog-description" id="game-dialog-description"></p>
+      <div class="game-stage"><canvas id="game-canvas" width="960" height="560" aria-label="Игровое поле"></canvas></div>
+      <div class="game-dialog-footer"><span id="game-controls"></span><span id="game-score">Счёт: 0</span><button class="button button-outline" id="restart-game" type="button">Начать заново</button></div>
+      <p class="game-dialog-hint">Для выхода нажми Esc или кнопку ×. Прогресс игры не отправляется на сервер.</p>
+    </dialog>
+
+    <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Закрыть">×</button></form>
+      <div class="eyebrow">СООБЩЕСТВО KAGAN GAMES</div>
+      <h2 id="auth-title">Добро пожаловать.</h2>
+      <p class="dialog-description">Создай аккаунт, чтобы сохранять игры и следить за новинками.</p>
+      <div class="auth-switch">
+        <button class="auth-mode active" type="button" data-auth-mode="register">Регистрация</button>
+        <button class="auth-mode" type="button" data-auth-mode="login">Вход</button>
+      </div>
+      <form id="auth-form">
+        <label class="form-label">Имя<input name="name" type="text" autocomplete="name" placeholder="Как тебя зовут?" required /></label>
+        <label class="form-label">Электронная почта<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+        <p class="form-error" id="auth-error" role="alert"></p>
+        <button class="button button-primary auth-submit" type="submit">Создать аккаунт <span>→</span></button>
+      </form>
+      <p class="privacy-note">Демо-режим: сохраняется только имя и почта в этом браузере. Это не защищённый аккаунт и не настоящая регистрация.</p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
