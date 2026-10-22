@@ -1,0 +1,24 @@
+.admin-page { min-height: 100vh; }
+.admin-card [hidden] { display: none !important; }
+.admin-shell { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0; }
+.admin-card { margin-top: 38px; padding: clamp(20px, 4vw, 38px); border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.admin-card h1 { margin: 12px 0; font: 800 clamp(28px, 5vw, 42px)/1.1 Manrope, sans-serif; letter-spacing: -.04em; }
+.admin-status, .admin-next-step { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.admin-card form { display: grid; gap: 15px; max-width: 430px; margin: 24px 0; }
+.admin-card input { width: 100%; margin-top: 7px; padding: 11px; border: 1px solid var(--line); border-radius: 6px; background: #11110f; color: var(--text); }
+.admin-card .auth-submit { min-height: 42px; }
+.admin-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 18px; }
+.admin-actions p { margin: 0; color: var(--muted); overflow-wrap: anywhere; }
+.admin-actions button { min-height: 36px; padding: 0 14px; }
+.admin-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.admin-table-wrap { overflow-x: auto; }
+.admin-table { min-width: 620px; }
+.admin-back { display: inline-block; margin-top: 24px; color: var(--lime); font-size: 12px; }
+.admin-empty { padding: 18px 14px; color: var(--muted); text-align: center; }
+.privacy-policy h2 { margin: 28px 0 10px; font: 700 19px Manrope, sans-serif; }
+.privacy-policy p { color: #bbb9ae; font-size: 13px; line-height: 1.8; }
+.privacy-policy a:not(.admin-back) { color: var(--lime); text-decoration: underline; }
+@media (max-width: 600px) {
+  .admin-stats { grid-template-columns: 1fr; }
+  .admin-card { margin-top: 24px; }
+}

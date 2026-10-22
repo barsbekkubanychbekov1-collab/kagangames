@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#11110f" />
+    <title>Админ-панель — Kagan Games</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./admin.css" />
+    <script src="./supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./admin.js" defer></script>
+  </head>
+  <body class="admin-page">
+    <main class="admin-shell">
+      <a class="brand" href="./index.html">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span>KAGAN<span class="brand-light">GAMES</span></span>
+      </a>
+      <section class="admin-card" aria-labelledby="admin-title">
+        <div class="eyebrow">ЗАКРЫТЫЙ РАЗДЕЛ</div>
+        <h1 id="admin-title">Админ-панель</h1>
+        <p class="admin-status" id="admin-status" role="status">Проверяю подключение…</p>
+        <form id="admin-login" hidden>
+          <label class="form-label">Электронная почта<input name="email" type="email" autocomplete="username" required /></label>
+          <label class="form-label">Пароль<input name="password" type="password" autocomplete="current-password" required /></label>
+          <p class="form-error" id="admin-error" role="alert"></p>
+          <button class="button button-primary auth-submit" type="submit">Войти</button>
+        </form>
+        <section id="admin-dashboard" hidden aria-label="Статистика Kagan Games">
+          <div class="admin-actions">
+            <p id="admin-identity"></p>
+            <button class="button button-outline" id="admin-logout" type="button">Выйти</button>
+          </div>
+          <div class="admin-stats">
+            <article class="admin-stat"><span>Регистрации с согласием</span><strong id="signup-total">—</strong></article>
+            <article class="admin-stat"><span>Входы с согласием</span><strong id="login-total">—</strong></article>
+            <article class="admin-stat"><span>Запуски игр с согласием</span><strong id="game-total">—</strong></article>
+          </div>
+          <div class="admin-table-wrap">
+            <div class="admin-table-heading"><h2>Последние события</h2><span>До 100 записей</span></div>
+            <table class="admin-table">
+              <thead><tr><th>Пользователь</th><th>Событие</th><th>Игра</th><th>Время</th></tr></thead>
+              <tbody id="event-rows"></tbody>
+            </table>
+          </div>
+          <p class="admin-next-step">В таблицу попадают только события пользователей, давших согласие. Не делитесь паролем от админского аккаунта.</p>
+        </section>
+        <a class="admin-back" href="./index.html">← На сайт Kagan Games</a>
+      </section>
+    </main>
+  </body>
+</html>

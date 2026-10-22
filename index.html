@@ -16,6 +16,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./app.js" defer></script>
   </head>
   <body>
@@ -68,7 +70,7 @@
         </header>
         <div class="privacy-banner" role="note">
           <span aria-hidden="true">ⓘ</span>
-          <p><strong>Приватность:</strong> сайт не записывает запуски игр, регистрации или время входа.</p>
+          <p><strong>Приватность:</strong> игровые события и время входа записываются только для пользователей, давших согласие. <a href="./privacy.html">Подробнее</a></p>
         </div>
 
         <section class="page-section active" id="page-home" aria-labelledby="hero-title">
@@ -224,10 +226,14 @@
       <form id="auth-form">
         <label class="form-label">Имя<input name="name" type="text" autocomplete="name" placeholder="Как тебя зовут?" required /></label>
         <label class="form-label">Электронная почта<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+        <label class="form-label">Пароль<input name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Не менее 8 символов" required /></label>
+        <label class="consent-label" id="tracking-consent-label"><input name="trackingConsent" type="checkbox" /> <span>Разрешаю записывать email аккаунта, время регистрации и входа, а также запуски игр, чтобы владелец сайта видел их в закрытой панели. Согласие можно отозвать.</span></label>
         <p class="form-error" id="auth-error" role="alert"></p>
         <button class="button button-primary auth-submit" type="submit">Создать аккаунт <span>→</span></button>
       </form>
-      <p class="privacy-note">Демо-режим: сохраняется только имя и почта в этом браузере. Это не защищённый аккаунт и не настоящая регистрация.</p>
+      <p class="privacy-note" id="auth-privacy-note">Для настоящей регистрации сайт использует защищённый вход Supabase. Без согласия входы и запуски игр не связываются с аккаунтом. <a href="./privacy.html">Правила обработки данных</a>.</p>
+      <button class="button button-outline consent-revoke" id="grant-consent" type="button" hidden>Дать согласие на аналитику</button>
+      <button class="button button-outline consent-revoke" id="revoke-consent" type="button" hidden>Отозвать согласие на аналитику</button>
     </dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </body>

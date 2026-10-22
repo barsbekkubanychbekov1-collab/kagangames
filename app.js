@@ -27,6 +27,11 @@ let currentGameId = null;
 let gameFrameId = 0;
 let gameLastFrame = 0;
 let gameState = null;
+const supabaseConfig = window.KAGAN_SUPABASE_CONFIG || {};
+const supabaseClient = window.supabase?.createClient && supabaseConfig.url && supabaseConfig.anonKey
+  ? window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey)
+  : null;
+let currentUser = null;
 const gameCanvas = document.querySelector("#game-canvas");
 const gameContext = gameCanvas.getContext("2d");
 const gameKeys = new Set();
@@ -119,27 +124,49 @@ function updateAuthMode(mode) {
   const nameInput = document.querySelector('[name="name"]');
   nameInput.closest(".form-label").hidden = mode === "login";
   nameInput.required = mode === "register";
+  const passwordInput = document.querySelector('[name="password"]');
+  passwordInput.autocomplete = mode === "login" ? "current-password" : "new-password";
+  document.querySelector("#tracking-consent-label").hidden = mode === "login";
+  document.querySelector("#grant-consent").hidden = mode !== "login" || !currentUser;
+  document.querySelector("#revoke-consent").hidden = mode !== "login" || !currentUser;
   document.querySelector(".auth-submit").innerHTML = mode === "login" ? "Войти <span>→</span>" : "Создать аккаунт <span>→</span>";
   document.querySelector("#auth-error").textContent = "";
 }
 
 function updateAccountButton() {
-  const account = JSON.parse(localStorage.getItem("kaganAccount") || "null");
   const button = document.querySelector("#account-button");
-  if (account?.name) {
-    button.textContent = account.name;
+  const sidebarButton = document.querySelector(".button-sidebar");
+  if (currentUser) {
+    button.textContent = currentUser.user_metadata?.name || currentUser.email;
     button.title = "Нажми, чтобы выйти";
     button.dataset.logout = "true";
+    sidebarButton.textContent = "Аккаунт и приватность";
   } else {
     button.textContent = "Войти";
     button.removeAttribute("title");
     delete button.dataset.logout;
+    sidebarButton.textContent = "Войти в аккаунт";
+  }
+}
+
+async function recordUserEvent(eventType, gameId = null) {
+  if (!supabaseClient || !currentUser) return;
+  try {
+    const { error } = await supabaseClient.rpc("record_user_event", {
+      p_event_type: eventType,
+      p_game_id: gameId
+    });
+    if (error) throw error;
+  } catch (error) {
+    console.error("Не удалось записать событие аккаунта:", error.message);
+    showToast("Не удалось обновить статистику аккаунта.");
   }
 }
 
 function startGame(id) {
   const game = games.find((item) => item.id === id);
   if (!game) return;
+  void recordUserEvent("game_start", id);
   currentGameId = id;
   gameState = {
     score: 0, elapsed: 0, spawn: 0, lives: 3, ended: false,
@@ -505,48 +532,108 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-document.querySelectorAll("[data-open-auth]").forEach((button) => button.addEventListener("click", () => {
+document.querySelectorAll("[data-open-auth]").forEach((button) => button.addEventListener("click", async () => {
   if (button.dataset.logout) {
-    localStorage.removeItem("kaganAccount");
-    updateAccountButton();
-    showToast("Вы вышли из демо-аккаунта.");
+    try {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) {
+        showToast("Не удалось выйти из аккаунта.");
+        console.error("Ошибка выхода:", error.message);
+        return;
+      }
+      currentUser = null;
+      updateAccountButton();
+      showToast("Вы вышли из аккаунта.");
+    } catch (error) {
+      console.error("Ошибка выхода:", error.message);
+      showToast("Не удалось выйти из аккаунта.");
+    }
     return;
   }
   updateAuthMode("register");
+  document.querySelector("#auth-error").textContent = supabaseClient
+    ? ""
+    : "Настоящая регистрация пока не настроена. Владелец сайта должен подключить backend.";
   document.querySelector("#auth-dialog").showModal();
 }));
 
 document.querySelectorAll("[data-auth-mode]").forEach((button) => button.addEventListener("click", () => updateAuthMode(button.dataset.authMode)));
 
-document.querySelector("#auth-form").addEventListener("submit", (event) => {
+document.querySelector("#auth-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!supabaseClient) {
+    document.querySelector("#auth-error").textContent = "Регистрация пока недоступна: backend ещё не настроен.";
+    return;
+  }
   const formData = new FormData(event.currentTarget);
   const email = String(formData.get("email")).trim().toLowerCase();
   const error = document.querySelector("#auth-error");
-  const account = JSON.parse(localStorage.getItem("kaganAccount") || "null");
-
-  if (authMode === "register") {
-    if (account?.email === email) {
-      error.textContent = "Для этой почты уже создан демо-аккаунт. Попробуй войти.";
+  const password = String(formData.get("password"));
+  const submitButton = document.querySelector(".auth-submit");
+  submitButton.disabled = true;
+  error.textContent = "";
+  try {
+    if (authMode === "register") {
+      const { data, error: authError } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name: String(formData.get("name")).trim(),
+            tracking_consent: formData.get("trackingConsent") === "on",
+            consent_version: "2026-10-14"
+          }
+        }
+      });
+      if (authError) throw authError;
+      if (data.session) currentUser = data.user;
+      document.querySelector("#auth-dialog").close();
+      event.currentTarget.reset();
+      updateAccountButton();
+      showToast(data.session ? "Аккаунт создан." : "Проверь почту, чтобы подтвердить регистрацию.");
       return;
     }
-    const newAccount = { name: String(formData.get("name")).trim(), email };
-    localStorage.setItem("kaganAccount", JSON.stringify(newAccount));
-    updateAccountButton();
+
+    const { data, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (authError) throw authError;
+    currentUser = data.user;
+    await recordUserEvent("login");
     document.querySelector("#auth-dialog").close();
     event.currentTarget.reset();
-    showToast("Демо-аккаунт создан в этом браузере.");
-    return;
+    updateAccountButton();
+    showToast(`С возвращением, ${currentUser.user_metadata?.name || currentUser.email}!`);
+  } catch (authError) {
+    error.textContent = authError.message || "Не удалось выполнить запрос. Попробуй ещё раз.";
+    console.error("Ошибка аккаунта:", authError.message);
+  } finally {
+    submitButton.disabled = false;
   }
+});
 
-  if (!account || account.email !== email) {
-    error.textContent = "Для этой почты в браузере нет демо-профиля. Сначала зарегистрируйся.";
+document.querySelector("#revoke-consent").addEventListener("click", async () => {
+  if (!supabaseClient || !currentUser) return;
+  try {
+    const { error } = await supabaseClient.rpc("revoke_tracking_consent");
+    if (error) throw error;
+  } catch (error) {
+    console.error("Не удалось отозвать согласие:", error.message);
+    document.querySelector("#auth-error").textContent = "Не удалось сохранить отзыв согласия. Попробуй ещё раз.";
     return;
   }
-  updateAccountButton();
-  document.querySelector("#auth-dialog").close();
-  event.currentTarget.reset();
-  showToast(`С возвращением, ${account.name}!`);
+  document.querySelector("#auth-error").textContent = "Согласие отозвано. Новые входы и запуски игр не будут записываться.";
+});
+
+document.querySelector("#grant-consent").addEventListener("click", async () => {
+  if (!supabaseClient || !currentUser) return;
+  try {
+    const { error } = await supabaseClient.rpc("grant_tracking_consent", { p_consent_version: "2026-10-14" });
+    if (error) throw error;
+  } catch (error) {
+    console.error("Не удалось сохранить согласие:", error.message);
+    document.querySelector("#auth-error").textContent = "Не удалось сохранить согласие. Попробуй ещё раз.";
+    return;
+  }
+  document.querySelector("#auth-error").textContent = "Согласие сохранено. Новые события аккаунта будут записываться.";
 });
 
 document.querySelectorAll(".ranking-tab").forEach((button) => button.addEventListener("click", () => {
@@ -561,5 +648,27 @@ document.querySelectorAll(".ranking-tab").forEach((button) => button.addEventLis
 renderFilters();
 renderGames();
 renderRankings();
-updateAccountButton();
+if (supabaseClient) {
+  supabaseClient.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      console.error("Не удалось восстановить аккаунт:", error.message);
+      return;
+    }
+    currentUser = data.session?.user || null;
+    updateAccountButton();
+  }).catch((error) => {
+    console.error("Не удалось проверить сеанс:", error.message);
+    showToast("Не удалось проверить сеанс аккаунта.");
+  });
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user || null;
+    updateAccountButton();
+  });
+} else {
+  document.querySelector("#account-button").disabled = true;
+  document.querySelectorAll("[data-open-auth]").forEach((button) => {
+    if (button.id !== "account-button") button.disabled = true;
+  });
+  document.querySelector(".sidebar-note").textContent = "Вход и регистрация временно недоступны: backend ещё не настроен.";
+}
 navigate(location.hash.slice(1) || "home");
