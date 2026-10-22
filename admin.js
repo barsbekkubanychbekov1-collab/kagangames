@@ -42,15 +42,85 @@ function appendCell(row, value) {
   row.append(cell);
 }
 
+function renderReferrals(referrals) {
+  const rows = document.querySelector("#referral-rows");
+  rows.replaceChildren();
+  if (referrals.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.className = "admin-empty";
+    cell.textContent = "Участники ещё не добавлены. Добавь не больше пяти в Supabase, следуя README.";
+    row.append(cell);
+    rows.append(row);
+    return;
+  }
+
+  referrals.forEach((participant) => {
+    const row = document.createElement("tr");
+    appendCell(row, participant.account_name
+      ? `${participant.account_name} · ${participant.email}`
+      : participant.email);
+
+    const linkCell = document.createElement("td");
+    const inviteLink = document.createElement("a");
+    inviteLink.href = new URL(`./?ref=${encodeURIComponent(participant.referral_code)}`, location.href).href;
+    inviteLink.textContent = participant.referral_code;
+    inviteLink.target = "_blank";
+    inviteLink.rel = "noopener noreferrer";
+    linkCell.append(inviteLink);
+    row.append(linkCell);
+
+    appendCell(row, String(participant.confirmed_referrals));
+    appendCell(row, `${participant.eligible_cash_som} сом`);
+    const statusCell = document.createElement("td");
+    if (participant.cash_paid_at) {
+      statusCell.textContent = `Выплачено наличными · ${formatDate(participant.cash_paid_at)}`;
+    } else if (participant.eligible_cash_som > 0) {
+      const button = document.createElement("button");
+      button.className = "button button-outline referral-pay-button";
+      button.type = "button";
+      button.textContent = "Отметить наличную выплату";
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        try {
+          const { error } = await client.rpc("admin_mark_referral_cash_paid", {
+            p_user_id: participant.user_id
+          });
+          if (error) throw error;
+          await loadDashboard(currentAdminUser);
+        } catch (error) {
+          console.error("Не удалось отметить выплату:", error.message);
+          button.disabled = false;
+          setStatus("Не удалось обновить выплату. Проверь подключение и попробуй снова.");
+        }
+      });
+      statusCell.append(button);
+    } else {
+      statusCell.textContent = `Нужно ещё ${Math.max(0, 4 - participant.confirmed_referrals)} подтверждённых`;
+    }
+    row.append(statusCell);
+    rows.append(row);
+  });
+}
+
+let currentAdminUser = null;
+
 async function loadDashboard(user) {
   setStatus("Проверяю права доступа…");
   try {
-    const [{ data: summary, error: summaryError }, { data: events, error: eventsError }] = await Promise.all([
+    const [
+      { data: summary, error: summaryError },
+      { data: events, error: eventsError },
+      { data: referrals, error: referralsError }
+    ] = await Promise.all([
       client.rpc("admin_get_summary"),
-      client.rpc("admin_get_events", { p_limit: 100 })
+      client.rpc("admin_get_events", { p_limit: 100 }),
+      client.rpc("admin_get_referrals")
     ]);
-    if (summaryError || eventsError) throw summaryError || eventsError;
+    if (summaryError || eventsError || referralsError) throw summaryError || eventsError || referralsError;
 
+    currentAdminUser = user;
     document.querySelector("#admin-identity").textContent = `Вошли как ${user.email}`;
     document.querySelector("#signup-total").textContent = summary.signups;
     document.querySelector("#login-total").textContent = summary.logins;
@@ -75,6 +145,7 @@ async function loadDashboard(user) {
         rows.append(row);
       });
     }
+    renderReferrals(referrals);
     loginForm.hidden = true;
     dashboard.hidden = false;
     setStatus("Данные доступны только назначенному администратору.");
@@ -141,6 +212,7 @@ document.querySelector("#admin-logout").addEventListener("click", async () => {
     const { error } = await client.auth.signOut();
     if (error) throw error;
     dashboard.hidden = true;
+    currentAdminUser = null;
     loginForm.reset();
     loginForm.hidden = false;
     setStatus("Вы вышли. Войти может только назначенный администратор.");

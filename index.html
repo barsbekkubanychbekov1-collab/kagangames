@@ -70,7 +70,7 @@
         </header>
         <div class="privacy-banner" role="note">
           <span aria-hidden="true">ⓘ</span>
-          <p><strong>Приватность:</strong> игровые события и время входа записываются только для пользователей, давших согласие. <a href="./privacy.html">Подробнее</a></p>
+          <p><strong>Приватность:</strong> время входа, запуски и приглашения учитываются только с вашего согласия. <a href="./privacy.html">Подробнее</a></p>
         </div>
 
         <section class="page-section active" id="page-home" aria-labelledby="hero-title">
@@ -227,7 +227,8 @@
         <label class="form-label">Имя<input name="name" type="text" autocomplete="name" placeholder="Как тебя зовут?" required /></label>
         <label class="form-label">Электронная почта<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
         <label class="form-label">Пароль<input name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Не менее 8 символов" required /></label>
-        <label class="consent-label" id="tracking-consent-label"><input name="trackingConsent" type="checkbox" /> <span>Разрешаю записывать email аккаунта, время регистрации и входа, а также запуски игр, чтобы владелец сайта видел их в закрытой панели. Согласие можно отозвать.</span></label>
+        <label class="form-label" id="referral-code-label" hidden>Код приглашения<input name="referralCode" type="text" autocomplete="off" maxlength="12" placeholder="Например, KG4FUN" /></label>
+        <label class="consent-label" id="tracking-consent-label"><input name="trackingConsent" type="checkbox" /> <span>Разрешаю записывать email аккаунта, время регистрации и входа, запуски игр и код приглашения, чтобы владелец видел их в закрытой панели. Согласие можно отозвать.</span></label>
         <p class="form-error" id="auth-error" role="alert"></p>
         <button class="button button-primary auth-submit" type="submit">Создать аккаунт <span>→</span></button>
       </form>

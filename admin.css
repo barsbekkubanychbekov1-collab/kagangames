@@ -15,6 +15,10 @@
 .admin-table { min-width: 620px; }
 .admin-back { display: inline-block; margin-top: 24px; color: var(--lime); font-size: 12px; }
 .admin-empty { padding: 18px 14px; color: var(--muted); text-align: center; }
+.referral-admin { margin: 22px 0; }
+.referral-admin .admin-next-step { margin: 8px 0 13px; }
+.referral-pay-button { min-height: 32px; padding: 0 9px; color: var(--text); font-size: 10px; white-space: nowrap; }
+.referral-admin .admin-table td a { color: var(--lime); text-decoration: underline; }
 .privacy-policy h2 { margin: 28px 0 10px; font: 700 19px Manrope, sans-serif; }
 .privacy-policy p { color: #bbb9ae; font-size: 13px; line-height: 1.8; }
 .privacy-policy a:not(.admin-back) { color: var(--lime); text-decoration: underline; }

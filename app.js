@@ -127,10 +127,17 @@ function updateAuthMode(mode) {
   const passwordInput = document.querySelector('[name="password"]');
   passwordInput.autocomplete = mode === "login" ? "current-password" : "new-password";
   document.querySelector("#tracking-consent-label").hidden = mode === "login";
+  document.querySelector("#referral-code-label").hidden = mode === "login";
   document.querySelector("#grant-consent").hidden = mode !== "login" || !currentUser;
   document.querySelector("#revoke-consent").hidden = mode !== "login" || !currentUser;
   document.querySelector(".auth-submit").innerHTML = mode === "login" ? "Войти <span>→</span>" : "Создать аккаунт <span>→</span>";
   document.querySelector("#auth-error").textContent = "";
+}
+
+const referralInput = document.querySelector('[name="referralCode"]');
+const referralCodeFromUrl = new URLSearchParams(location.search).get("ref");
+if (referralCodeFromUrl) {
+  referralInput.value = referralCodeFromUrl.replace(/[^a-z0-9]/gi, "").slice(0, 12).toUpperCase();
 }
 
 function updateAccountButton() {
@@ -581,7 +588,10 @@ document.querySelector("#auth-form").addEventListener("submit", async (event) =>
           data: {
             name: String(formData.get("name")).trim(),
             tracking_consent: formData.get("trackingConsent") === "on",
-            consent_version: "2026-10-14"
+            consent_version: "2026-10-14",
+            ...(formData.get("trackingConsent") === "on"
+              ? { referral_code: String(formData.get("referralCode")).trim().toUpperCase() }
+              : {})
           }
         }
       });
