@@ -36,7 +36,32 @@ function displayGameLabel(gameId) {
     coral: "Коралловый ныряльщик",
     meteorguard: "Метеорный дозор",
     lantern: "Тайна фонарей",
-    pixelchef: "Пиксельный повар"
+    pixelchef: "Пиксельный повар",
+    crystalbreak: "Кристальный отбой",
+    starcourier: "Звёздный курьер",
+    snowslalom: "Снежный слалом",
+    runemath: "Мастер рун",
+    lighthouse: "Прыжок маяка",
+    snakegarden: "Змеиный сад",
+    flapcloud: "Крылья облаков",
+    pongduel: "Неоновая дуэль",
+    mineralmines: "Шахта минералов",
+    numberforge: "Числовая кузня",
+    boxvoyage: "Коробочный рейс",
+    lightmatrix: "Матрица света",
+    bullseye: "Золотое яблочко",
+    skylinehop: "Крыши города",
+    starinvaders: "Защитники галактики",
+    towercraft: "Башня мастера",
+    deepmaze: "Подземный ход",
+    beatlanes: "Бит-бульвар",
+    pipeworks: "Мастер труб",
+    minigolf: "Лунный мини-гольф",
+    colorshift: "Цветовой поток",
+    quickdraw: "Молниеносная реакция",
+    blockdrop: "Пиксельная мастерская",
+    harborcatch: "Рыбацкая бухта",
+    pairgarden: "Сад парных листьев"
   })[gameId] || "—";
 }
 

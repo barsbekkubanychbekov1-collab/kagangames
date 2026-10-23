@@ -15,16 +15,18 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=15games-20261014" />
+    <link rel="stylesheet" href="./styles.css?v=cover-art-v4" />
     <script src="./supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
-    <script src="./app.js?v=15games-20261014" defer></script>
+    <script src="./extra-games.js?v=games-50"></script>
+    <script src="./tacstrike-3d.js?v=games-3d"></script>
+    <script src="./app.js?v=cover-art-v4" defer></script>
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar" aria-label="Главная навигация">
         <a class="brand" href="#home" aria-label="Kagan Games — главная">
-          <span class="brand-mark" aria-hidden="true">K</span>
+          <span class="brand-mark" aria-hidden="true">KG</span>
           <span>KAGAN<span class="brand-light">GAMES</span></span>
         </a>
 
@@ -42,6 +44,9 @@
           <a class="nav-link" href="#developers" data-page="developers">
             <span class="nav-icon">✳</span> Разработчикам
           </a>
+          <a class="nav-link" href="#profile" data-page="profile">
+            <span class="nav-icon">◉</span> Профиль
+          </a>
         </nav>
 
         <div class="sidebar-bottom">
@@ -55,7 +60,7 @@
       <main class="main-content">
         <header class="topbar">
           <div class="mobile-brand">
-            <span class="brand-mark" aria-hidden="true">K</span>
+            <span class="brand-mark" aria-hidden="true">KG</span>
             <span>KAGAN<span class="brand-light">GAMES</span></span>
           </div>
           <label class="search-box">
@@ -70,7 +75,7 @@
         </header>
         <div class="privacy-banner" role="note">
           <span aria-hidden="true">ⓘ</span>
-          <p><strong>Приватность:</strong> время входа, запуски и приглашения учитываются только с вашего согласия. <a href="./privacy.html">Подробнее</a></p>
+          <p><strong>Приватность:</strong> серверная статистика аккаунта записывается только с вашего согласия; профиль и кошелёк остаются в браузере. <a href="./privacy.html">Подробнее</a></p>
         </div>
 
         <section class="page-section active" id="page-home" aria-labelledby="hero-title">
@@ -78,13 +83,13 @@
             <div class="hero-copy">
               <div class="eyebrow"><span class="live-dot"></span> СОБСТВЕННЫЕ ИГРЫ KAGAN GAMES</div>
               <h1 id="hero-title">Игры, которые<br />хочется <span>проходить.</span></h1>
-              <p>Пятнадцать оригинальных мини-игр Kagan Games. Выбирай игру и запускай прямо здесь, не покидая сайт.</p>
+              <p>Пятьдесят оригинальных мини-игр Kagan Games: головоломки, аркады, гонки и испытания на реакцию. Выбирай и играй прямо в браузере.</p>
               <div class="hero-actions">
                 <a class="button button-primary button-large" href="#catalog">Смотреть игры <span>→</span></a>
                 <a class="button button-outline button-large" href="#developers">Я разработчик</a>
               </div>
               <div class="hero-stats">
-                <div><strong>15</strong><span>игр в подборке</span></div>
+                <div><strong>50</strong><span>игр в подборке</span></div>
                 <i></i>
                 <div><strong>Здесь</strong><span>запуск в браузере</span></div>
                 <i></i>
@@ -136,6 +141,7 @@
             <div class="eyebrow">ИССЛЕДУЙ ИГРЫ</div>
             <h1 id="catalog-title">Каталог <span>игр.</span></h1>
             <p>Оригинальные браузерные мини-игры Kagan Games — нажми «Играть», чтобы начать.</p>
+            <p class="reward-legend"><b>$</b> — за победу в отмеченной игре начисляется 10 куруткиков. Это игровая валюта, не реальные деньги.</p>
             <p class="demo-note">Игры запускаются прямо на этой странице и не требуют установки.</p>
           </div>
           <div class="catalog-toolbar">
@@ -146,11 +152,61 @@
           <div class="empty-state" id="empty-games" hidden>Ничего не нашлось. Попробуй другой запрос или жанр.</div>
         </section>
 
+        <section class="page-section" id="page-profile" aria-labelledby="profile-title">
+          <div class="page-intro profile-intro">
+            <div class="eyebrow"><span class="live-dot"></span> ТВОЙ KAGAN GAMES</div>
+            <h1 id="profile-title">Личный <span>профиль.</span></h1>
+            <p>Информация об аккаунте и игровой прогресс в этом браузере.</p>
+          </div>
+          <section class="profile-card" aria-labelledby="profile-account-title">
+            <div class="profile-avatar" id="profile-avatar" aria-hidden="true">KG</div>
+            <div class="profile-identity">
+              <div class="eyebrow" id="profile-status">ГОСТЬ</div>
+              <h2 id="profile-account-title">Играй как гость</h2>
+              <p id="profile-email">Войди в аккаунт, чтобы увидеть имя и почту.</p>
+            </div>
+            <button class="button button-primary profile-account-action" id="profile-account-action" type="button" data-open-auth>Войти или создать аккаунт</button>
+          </section>
+          <section class="avatar-studio" aria-labelledby="avatar-studio-title">
+            <div class="section-heading"><div><div class="eyebrow">ТВОЙ ИГРОК</div><h2 id="avatar-studio-title">Собери свой стиль</h2></div><span class="local-only-label">Сохраняется в этом браузере</span></div>
+            <div class="avatar-options" id="avatar-options" role="group" aria-label="Выбери аватар"></div>
+          </section>
+          <section class="profile-library" aria-label="Твои игры">
+            <div class="library-panel"><div class="section-heading"><div><div class="eyebrow">ТВОЯ ПОДБОРКА</div><h2>Избранное</h2></div></div><div class="library-games" id="favorite-games"></div></div>
+            <div class="library-panel"><div class="section-heading"><div><div class="eyebrow">ПРОДОЛЖАЙ ИГРАТЬ</div><h2>Недавно открытые</h2></div></div><div class="library-games" id="recent-games"></div></div>
+          </section>
+          <section class="profile-stats" aria-label="Личная игровая статистика">
+            <article class="profile-stat"><span>Запусков игр</span><strong id="profile-starts">0</strong></article>
+            <article class="profile-stat"><span>Разных игр</span><strong id="profile-games">0</strong></article>
+            <article class="profile-stat"><span>Побед</span><strong id="profile-wins">0</strong></article>
+          </section>
+          <section class="achievements-section" aria-labelledby="profile-achievements-title">
+            <div class="achievements-heading">
+              <div class="eyebrow">ИГРАЙ И ОТКРЫВАЙ НАГРАДЫ</div>
+              <h2 id="profile-achievements-title">Достижения</h2>
+              <p>Прогресс считается по локальной статистике этого браузера. За сами достижения бонусная валюта не начисляется.</p>
+            </div>
+            <div class="achievements-list" id="profile-achievements"></div>
+          </section>
+          <section class="profile-card profile-wallet" aria-labelledby="profile-wallet-title">
+            <div>
+              <div class="eyebrow">ЛОКАЛЬНЫЙ КОШЕЛЁК</div>
+              <h2 id="profile-wallet-title">Твои куруткики</h2>
+              <p>Валюта и статистика хранятся в этом браузере, не синхронизируются с аккаунтом и не отображаются в онлайн-рейтинге.</p>
+            </div>
+            <div class="profile-currencies">
+              <span><b id="profile-kurut">0</b> куруткиков</span>
+              <span><b id="profile-boorsok">0</b> боорсоков</span>
+            </div>
+            <button class="button button-outline" id="profile-shop-link" type="button">Открыть магазин скинов</button>
+          </section>
+        </section>
+
         <section class="page-section" id="page-rankings" aria-labelledby="rankings-title">
           <div class="page-intro">
             <div class="eyebrow">СОБСТВЕННЫЕ ПРОЕКТЫ</div>
             <h1 id="rankings-title">Вселенная <span>Kagan.</span></h1>
-            <p>Все игры в каталоге — оригинальные браузерные мини-игры Kagan Games, запускаются прямо на сайте.</p>
+            <p>Играй, создавай, приглашай друзей и поддерживай проекты. В Kagan Games появятся рейтинги и звания за подтверждённые достижения.</p>
           </div>
           <div class="ranking-tabs" role="tablist" aria-label="Игры и авторы">
             <button class="ranking-tab active" data-ranking="games" role="tab" aria-selected="true">Игры</button>
@@ -158,6 +214,64 @@
             <button class="ranking-tab" data-ranking="studios" role="tab" aria-selected="false">Студии игр</button>
           </div>
           <div class="ranking-list" id="ranking-list"></div>
+          <section class="community-leaderboard" aria-labelledby="player-leaderboard-title">
+            <div class="community-mark" aria-hidden="true">↗</div>
+            <div class="community-copy">
+              <div class="eyebrow">СЛЕДУЮЩИЙ ЭТАП</div>
+              <h2 id="player-leaderboard-title">Лидерборд игроков</h2>
+              <p>Онлайн-рейтинг появится после подключения серверного сохранения рекордов. Сейчас игровые результаты не отправляются на сервер, поэтому здесь нет выдуманных мест и очков.</p>
+            </div>
+            <span class="feature-status">В разработке</span>
+          </section>
+          <section class="title-ladder" aria-labelledby="title-ladder-heading">
+            <div class="title-ladder-heading">
+              <div class="eyebrow">ЗВАНИЯ СООБЩЕСТВА</div>
+              <h2 id="title-ladder-heading">Титулы за реальные достижения</h2>
+              <p>Звание будет присваиваться автоматически только после проверки результата.</p>
+            </div>
+            <div class="title-grid">
+              <article class="title-card title-card-hamster">
+                <span class="title-icon" aria-hidden="true">✦</span>
+                <h3>Хомяки</h3>
+                <p>Участник программы → Наставник за 4 подтверждённые регистрации → Лидер за 12.</p>
+                <span class="title-note">50 сом наличными — один раз за 4 проверенные регистрации, по действующим правилам.</span>
+              </article>
+              <article class="title-card title-card-developer">
+                <span class="title-icon" aria-hidden="true">⌘</span>
+                <h3>Разработчики</h3>
+                <p>Создатель за 1 опубликованную игру → Автор за 3 → Мастер за 5.</p>
+                <span class="title-note">Учитываются только игры, одобренные и опубликованные в каталоге.</span>
+              </article>
+              <article class="title-card title-card-player">
+                <span class="title-icon" aria-hidden="true">◎</span>
+                <h3>Игроки</h3>
+                <p>Игрок за первую пройденную игру → Исследователь за 5 разных игр → Чемпион за 10 побед.</p>
+                <span class="title-note">Прогресс начнёт учитываться, когда появится серверный рейтинг.</span>
+              </article>
+              <article class="title-card title-card-advertiser">
+                <span class="title-icon" aria-hidden="true">↗</span>
+                <h3>Рекламодатели</h3>
+                <p>Партнёр за 1 подтверждённое размещение → Постоянный партнёр за 3 → Главный партнёр за 10.</p>
+                <span class="title-note">Учитываются только согласованные и проведённые рекламные кампании.</span>
+              </article>
+            </div>
+            <p class="title-verification-note">Правила титулов опубликованы заранее. Пока система проверки достижений не подключена, эти звания не выдаются и не отображаются у аккаунтов.</p>
+          </section>
+          <section class="wallet-section" aria-labelledby="wallet-title">
+            <div class="wallet-heading">
+              <div>
+                <div class="eyebrow">ИГРОВОЙ КОШЕЛЁК · ТОЛЬКО ЭТОТ БРАУЗЕР</div>
+                <h2 id="wallet-title">Куруткики и боорсок</h2>
+                <p>За победы начисляются куруткики и боорсок. Покупай за куруткики только скины оформления всего Kagan Games — они не дают игрового преимущества.</p>
+              </div>
+              <div class="wallet-balance" aria-live="polite">
+                <span class="wallet-coin wallet-kurut"><b>К</b> <span id="wallet-kurut">0</span> куруткиков</span>
+                <span class="wallet-coin wallet-boorsok"><b>Б</b> <span id="wallet-boorsok">0</span> боорсоков</span>
+              </div>
+            </div>
+            <div class="cosmetic-shop" id="cosmetic-shop"></div>
+            <p class="wallet-note">Прогресс хранится локально и может потеряться при очистке данных браузера. Для синхронизации между устройствами понадобится backend.</p>
+          </section>
         </section>
 
         <section class="page-section" id="page-developers" aria-labelledby="developers-title">
@@ -196,7 +310,7 @@
         </section>
 
         <footer class="site-footer">
-          <a class="brand footer-brand" href="#home"><span class="brand-mark">K</span><span>KAGAN<span class="brand-light">GAMES</span></span></a>
+          <a class="brand footer-brand" href="#home"><span class="brand-mark">KG</span><span>KAGAN<span class="brand-light">GAMES</span></span></a>
           <span>Игры создают люди. Мы помогаем им встретиться.</span>
           <a href="#developers">Для разработчиков ↗</a>
         </footer>
@@ -209,16 +323,21 @@
         <button class="dialog-close" id="close-game" type="button" aria-label="Закрыть игру">×</button>
       </div>
       <p class="game-dialog-description" id="game-dialog-description"></p>
-      <div class="game-stage"><canvas id="game-canvas" width="960" height="560" aria-label="Игровое поле"></canvas></div>
-      <div class="game-dialog-footer"><span id="game-controls"></span><span id="game-score">Счёт: 0</span><button class="button button-outline" id="restart-game" type="button">Начать заново</button></div>
-      <p class="game-dialog-hint">Для выхода нажми Esc или кнопку ×. Прогресс игры не отправляется на сервер.</p>
+      <div class="game-view-switch" id="game-view-switch" role="group" aria-label="Перспектива игры">
+        <span>Перспектива</span>
+        <button class="view-mode-button" type="button" data-view-mode="first" aria-pressed="false">1-е лицо</button>
+        <button class="view-mode-button active" type="button" data-view-mode="third" aria-pressed="true">3-е лицо</button>
+      </div>
+      <div class="game-stage"><canvas id="game-canvas" width="960" height="560" aria-label="Игровое поле"></canvas><canvas id="tacstrike-3d-canvas" width="960" height="560" aria-hidden="true"></canvas></div>
+      <div class="game-dialog-footer"><span id="game-controls"></span><span id="game-score">Счёт: 0</span><button class="button button-outline" id="tactical-support" type="button" aria-label="Вызвать авиаудар" hidden>Авиаудар · E</button><button class="button button-outline" id="restart-game" type="button">Начать заново</button></div>
+      <p class="game-dialog-hint">Перспектива меняет оформление камеры, но не управление. Кошелёк и настройки сохраняются только в этом браузере; рекорды на сервер не отправляются.</p>
     </dialog>
 
     <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
       <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Закрыть">×</button></form>
       <div class="eyebrow">СООБЩЕСТВО KAGAN GAMES</div>
       <h2 id="auth-title">Добро пожаловать.</h2>
-      <p class="dialog-description">Создай аккаунт, чтобы сохранять игры и следить за новинками.</p>
+      <p class="dialog-description">Создай аккаунт, чтобы войти в сообщество Kagan Games.</p>
       <div class="auth-switch">
         <button class="auth-mode active" type="button" data-auth-mode="register">Регистрация</button>
         <button class="auth-mode" type="button" data-auth-mode="login">Вход</button>
