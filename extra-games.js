@@ -30,7 +30,7 @@
     const state = { score: 0, elapsed: 0, ended: false, mode: id };
     if (id === "snakegarden") Object.assign(state, { snake: [{ x: 9, y: 6 }, { x: 8, y: 6 }, { x: 7, y: 6 }], dir: { x: 1, y: 0 }, next: { x: 1, y: 0 }, tick: 0, food: { x: rand(20), y: rand(12) } });
     if (id === "flapcloud") Object.assign(state, { y: height / 2, vy: 0, gates: [], spawn: 0, passed: 0 });
-    if (id === "pongduel") Object.assign(state, { y: height / 2, ball: { x: width / 2, y: height / 2, vx: 260, vy: 150 }, player: 0, opponent: 0 });
+    if (id === "pongduel") Object.assign(state, { y: height / 2, ball: { x: width / 2, y: height / 2, vx: 260, vy: 150 }, player: 0, opponent: height / 2 });
     if (id === "mineralmines") {
       state.cells = Array.from({ length: 63 }, () => ({ mine: false, open: false, flag: false, near: 0 }));
       state.firstClick = true;
@@ -103,7 +103,6 @@
       s.gates = s.gates.filter((g) => { g.x -= 220 * dt; if (!g.passed && g.x < 185) { g.passed = true; s.passed += 1; } if (g.x < 212 && g.x > 145 && (s.y < g.top || s.y > g.top + g.gap)) end(s, `Пройдено ворот: ${s.passed}.`, false, finish); return g.x > -60; });
       s.score = s.passed;
       if (s.y < 35 || s.y > height - 25) end(s, `Пройдено ворот: ${s.passed}.`, false, finish);
-      if (s.passed >= 10) end(s, "Десять облачных ворот пройдены!", true, finish);
       if (s.passed >= 10) end(s, "Десять облачных ворот пройдены!", true, finish);
     } else if (id === "pongduel") {
       const b = s.ball; s.y = Math.max(55, Math.min(height - 55, s.y + (Number(keys.has("ArrowDown") || keys.has("KeyS")) - Number(keys.has("ArrowUp") || keys.has("KeyW"))) * 380 * dt));

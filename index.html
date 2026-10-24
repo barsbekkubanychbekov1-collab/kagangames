@@ -15,12 +15,12 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=cover-art-v4" />
+    <link rel="stylesheet" href="./styles.css?v=quality-v1" />
     <script src="./supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
-    <script src="./extra-games.js?v=games-50"></script>
+    <script src="./extra-games.js?v=quality-v1"></script>
     <script src="./tacstrike-3d.js?v=games-3d"></script>
-    <script src="./app.js?v=cover-art-v4" defer></script>
+    <script src="./app.js?v=quality-v1" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -323,6 +323,11 @@
         <button class="dialog-close" id="close-game" type="button" aria-label="Закрыть игру">×</button>
       </div>
       <p class="game-dialog-description" id="game-dialog-description"></p>
+      <div class="game-session-toolbar" aria-label="Управление игрой">
+        <span id="game-session-status" aria-live="polite">Раунд начался</span>
+        <button class="session-tool-button" id="pause-game" type="button" aria-pressed="false">Пауза <kbd>P</kbd></button>
+        <button class="session-tool-button" id="sound-game" type="button" aria-pressed="true">Звук: вкл.</button>
+      </div>
       <div class="game-view-switch" id="game-view-switch" role="group" aria-label="Перспектива игры">
         <span>Перспектива</span>
         <button class="view-mode-button" type="button" data-view-mode="first" aria-pressed="false">1-е лицо</button>
@@ -330,7 +335,11 @@
       </div>
       <div class="game-stage"><canvas id="game-canvas" width="960" height="560" aria-label="Игровое поле"></canvas><canvas id="tacstrike-3d-canvas" width="960" height="560" aria-hidden="true"></canvas></div>
       <div class="game-dialog-footer"><span id="game-controls"></span><span id="game-score">Счёт: 0</span><button class="button button-outline" id="tactical-support" type="button" aria-label="Вызвать авиаудар" hidden>Авиаудар · E</button><button class="button button-outline" id="restart-game" type="button">Начать заново</button></div>
-      <p class="game-dialog-hint">Перспектива меняет оформление камеры, но не управление. Кошелёк и настройки сохраняются только в этом браузере; рекорды на сервер не отправляются.</p>
+      <div class="game-result-panel" id="game-result-panel" hidden aria-live="polite">
+        <div class="game-result-copy"><span class="eyebrow" id="game-result-kicker">РАУНД ЗАВЕРШЁН</span><strong id="game-result-title"></strong><span id="game-result-detail"></span></div>
+        <div class="game-result-actions"><button class="button button-primary" id="replay-game" type="button">Сыграть ещё раз</button><button class="button button-outline" id="next-game" type="button">Следующая игра →</button></div>
+      </div>
+      <p class="game-dialog-hint">P — пауза · Esc — выйти. Рекорды сохраняются в этом браузере.</p>
     </dialog>
 
     <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">

@@ -346,6 +346,11 @@ h1, h2, h3, p { margin-top: 0; }
 .game-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .game-dialog-header h2 { margin: 7px 0 0; font: 700 23px Manrope, sans-serif; }
 .game-dialog-description { margin: 8px 0 14px; color: #aaaebd; font-size: 12px; }
+.game-session-toolbar { display: flex; align-items: center; gap: 8px; margin: 0 0 11px; }
+.game-session-toolbar > span { flex: 1; color: #a9e6f2; font-size: 10px; font-variant-numeric: tabular-nums; }
+.session-tool-button { min-height: 31px; padding: 0 10px; border: 1px solid #39434a; border-radius: 7px; background: #131820; color: #cbd4db; cursor: pointer; font: 600 10px "DM Sans", sans-serif; transition: background .18s, border-color .18s, color .18s; }
+.session-tool-button:hover, .session-tool-button[aria-pressed="true"] { border-color: #a9e6f288; background: #a9e6f218; color: #e7fbf8; }
+.session-tool-button kbd { margin-left: 5px; color: #8998a1; font: inherit; }
 .game-view-switch { display: flex; align-items: center; gap: 6px; margin: -3px 0 11px; }
 .game-view-switch[hidden] { display: none; }
 .game-view-switch > span { margin-right: 4px; color: #969da8; font-size: 10px; }
@@ -364,6 +369,14 @@ h1, h2, h3, p { margin-top: 0; }
 .game-dialog-footer .button { min-height: 33px; padding: 0 11px; font-size: 10px; }
 #tactical-support[hidden] { display: none; }
 .game-dialog-footer #game-score { padding: 7px 10px; border: 1px solid #a9e6f233; border-radius: 7px; background: #101722; color: #d5f36a; font-variant-numeric: tabular-nums; }
+.game-result-panel { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 14px; padding: 15px; border: 1px solid #a9e6f233; border-radius: 10px; background: linear-gradient(120deg, #a9e6f20c, #d5f36a0a); }
+.game-result-panel[hidden] { display: none; }
+.game-result-copy { display: grid; gap: 5px; min-width: 0; }
+.game-result-copy .eyebrow { color: #a9e6f2; font-size: 9px; }
+.game-result-copy strong { color: #f4f1e9; font: 700 17px Manrope, sans-serif; }
+.game-result-copy > span:last-child { color: #adb5bd; font-size: 10px; line-height: 1.5; }
+.game-result-actions { display: flex; flex: 0 0 auto; gap: 8px; }
+.game-result-actions .button { min-height: 35px; padding: 0 12px; font-size: 10px; }
 .game-dialog-hint { margin: 10px 0 0; color: #838796; font-size: 9px; }
 .dialog-close-form { position: absolute; top: 12px; right: 12px; }
 .dialog-close { width: 30px; height: 30px; border: 0; border-radius: 6px; background: #292923; color: #c4c3ba; cursor: pointer; font-size: 19px; }
@@ -428,6 +441,8 @@ h1, h2, h3, p { margin-top: 0; }
   .game-dialog { padding: 14px; }
   .game-dialog-footer { flex-wrap: wrap; }
   .game-dialog-footer > span:first-child { flex-basis: 100%; }
+  .game-result-panel { align-items: stretch; flex-direction: column; }
+  .game-result-actions { flex-wrap: wrap; }
   .privacy-banner { align-items: flex-start; flex-wrap: wrap; }
   .privacy-banner p { flex-basis: calc(100% - 30px); }
   .privacy-banner a { margin-left: 25px; }

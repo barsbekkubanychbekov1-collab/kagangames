@@ -66,6 +66,7 @@ let currentGameId = null;
 let gameFrameId = 0;
 let gameLastFrame = 0;
 let gameState = null;
+let audioContext = null;
 const supabaseConfig = window.KAGAN_SUPABASE_CONFIG || {};
 const supabaseClient = window.supabase?.createClient && supabaseConfig.url && supabaseConfig.anonKey
   ? window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey)
@@ -79,6 +80,7 @@ const gameHeight = gameCanvas.height;
 const walletStorageKey = "kagan-games-wallet-v1";
 const settingsStorageKey = "kagan-games-settings-v1";
 const profileStatsStorageKey = "kagan-games-profile-stats-v1";
+const gameRecordsStorageKey = "kagan-games-records-v1";
 const cosmeticItems = [
   { id: "aurora", name: "Северное сияние", currency: "kurut", cost: 60, color: "#56f0d0", description: "Бирюзовые акценты всего сайта" },
   { id: "sunrise", name: "Золотой рассвет", currency: "kurut", cost: 50, color: "#ffca70", description: "Тёплые золотые акценты" },
@@ -124,8 +126,13 @@ const savedSettings = settingsData && typeof settingsData === "object" && !Array
 const avatarOptions = ["🦊", "🐼", "🐸", "🐯", "🐙", "🐹", "🦄", "🤖"];
 const gamePreferences = {
   viewMode: savedSettings.viewMode === "first" ? "first" : "third",
-  avatar: avatarOptions.includes(savedSettings.avatar) ? savedSettings.avatar : "🦊"
+  avatar: avatarOptions.includes(savedSettings.avatar) ? savedSettings.avatar : "🦊",
+  soundEnabled: savedSettings.soundEnabled !== false
 };
+const storedGameRecords = readLocalJson(gameRecordsStorageKey, {}, "личные рекорды");
+const gameRecords = storedGameRecords && typeof storedGameRecords === "object" && !Array.isArray(storedGameRecords)
+  ? storedGameRecords
+  : {};
 const profileStatsData = readLocalJson(profileStatsStorageKey, {}, "статистику профиля");
 const savedProfileStats = profileStatsData && typeof profileStatsData === "object" && !Array.isArray(profileStatsData) ? profileStatsData : {};
 const profileStats = {
@@ -149,6 +156,37 @@ function saveGamePreferences() {
 
 function saveProfileStats() {
   return writeLocalJson(profileStatsStorageKey, profileStats, "статистику профиля");
+}
+
+function saveGameRecords() {
+  return writeLocalJson(gameRecordsStorageKey, gameRecords, "личные рекорды");
+}
+
+function playGameCue(type) {
+  if (!gamePreferences.soundEnabled) return;
+  const AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextConstructor) return;
+  try {
+    audioContext ||= new AudioContextConstructor();
+    if (audioContext.state === "suspended") void audioContext.resume();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const now = audioContext.currentTime;
+    const notes = type === "win" ? [523.25, 659.25, 783.99] : type === "loss" ? [293.66, 220] : [440, 587.33];
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(notes[0], now);
+    if (notes.length > 1) oscillator.frequency.setValueAtTime(notes[1], now + 0.11);
+    if (notes.length > 2) oscillator.frequency.setValueAtTime(notes[2], now + 0.22);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.075, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + (type === "win" ? 0.48 : 0.24));
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + (type === "win" ? 0.5 : 0.26));
+  } catch (error) {
+    console.warn("Не удалось воспроизвести звук игры:", error.message);
+  }
 }
 
 function renderProfile() {
@@ -649,6 +687,16 @@ function startGame(id) {
   document.querySelector("#game-dialog-description").textContent = game.description;
   document.querySelector("#game-controls").textContent = game.controls;
   document.querySelector("#game-score").textContent = id === "tacstrike" ? "Уровень: 1 / 10" : "Счёт: 0";
+  document.querySelector("#game-result-panel").hidden = true;
+  const previousRecord = getGameRecord(id).bestScore;
+  document.querySelector("#game-session-status").textContent = previousRecord > 0
+    ? `Твой рекорд: ${previousRecord} · удачи!`
+    : "Идёт игра · удачи!";
+  document.querySelector("#pause-game").textContent = "Пауза";
+  document.querySelector("#pause-game").setAttribute("aria-pressed", "false");
+  const soundButton = document.querySelector("#sound-game");
+  soundButton.textContent = gamePreferences.soundEnabled ? "Звук: вкл." : "Звук: выкл.";
+  soundButton.setAttribute("aria-pressed", String(gamePreferences.soundEnabled));
   document.querySelector("#tactical-support").hidden = id !== "tacstrike";
   document.querySelector("#game-view-switch").hidden = window.KaganExtraGames.isGame(id);
   document.querySelectorAll("[data-view-mode]").forEach((button) => {
@@ -661,15 +709,53 @@ function startGame(id) {
   if (!dialog.open) dialog.showModal();
   gameKeys.clear();
   gameLastFrame = performance.now();
+  playGameCue("tap");
   cancelAnimationFrame(gameFrameId);
   gameFrameId = requestAnimationFrame(runGameFrame);
+}
+
+function getGameRecord(id) {
+  const record = gameRecords[id];
+  if (!record || typeof record !== "object" || Array.isArray(record)) return { bestScore: 0, wins: 0, fastestWin: null };
+  return {
+    bestScore: Number.isFinite(record.bestScore) ? record.bestScore : 0,
+    wins: Number.isSafeInteger(record.wins) && record.wins >= 0 ? record.wins : 0,
+    fastestWin: Number.isFinite(record.fastestWin) && record.fastestWin > 0 ? record.fastestWin : null
+  };
 }
 
 function endGame(message, completed = false) {
   if (!gameState || gameState.ended) return;
   gameState.ended = true;
+  gameState.paused = false;
   gameState.endMessage = message;
   gameState.completed = completed;
+  const oldRecord = getGameRecord(currentGameId);
+  const score = Number.isFinite(gameState.score) ? gameState.score : 0;
+  const isNewRecord = score > oldRecord.bestScore;
+  const record = {
+    bestScore: Math.max(oldRecord.bestScore, score),
+    wins: oldRecord.wins + Number(completed),
+    fastestWin: completed
+      ? Math.min(oldRecord.fastestWin || gameState.elapsed || Infinity, gameState.elapsed || Infinity)
+      : oldRecord.fastestWin
+  };
+  if (completed && !Number.isFinite(record.fastestWin)) record.fastestWin = null;
+  gameRecords[currentGameId] = record;
+  saveGameRecords();
+  const resultPanel = document.querySelector("#game-result-panel");
+  document.querySelector("#game-result-kicker").textContent = completed
+    ? (isNewRecord ? "НОВЫЙ ЛИЧНЫЙ РЕКОРД" : "ПОБЕДА · ОТЛИЧНАЯ ИГРА")
+    : "РАУНД ЗАВЕРШЁН";
+  document.querySelector("#game-result-title").textContent = completed ? "Ты прошёл игру!" : "Попробуем ещё раз?";
+  const scoreLabel = Number.isFinite(gameState.score) ? `Лучший счёт: ${record.bestScore}` : "";
+  const winsLabel = record.wins ? `Побед в этой игре: ${record.wins}` : "";
+  document.querySelector("#game-result-detail").textContent = [message, scoreLabel, winsLabel].filter(Boolean).join(" · ");
+  resultPanel.hidden = false;
+  document.querySelector("#game-session-status").textContent = completed ? "Игра пройдена" : "Раунд завершён";
+  document.querySelector("#pause-game").textContent = "Пауза";
+  document.querySelector("#pause-game").setAttribute("aria-pressed", "false");
+  playGameCue(completed ? "win" : "loss");
   if (completed) {
     profileStats.wins += 1;
     saveProfileStats();
@@ -695,13 +781,27 @@ function createTacticalTargets(state) {
 }
 
 function requestTacticalAirSupport(state) {
-  if (state.airSupport <= 0 || state.airstrikeTime > 0 || state.ended) return;
+  if (state.airSupport <= 0 || state.airstrikeTime > 0 || state.ended || state.paused) return;
   state.airSupport -= 1;
   state.airstrikeTime = 2.4;
   state.airstrikeRuns = state.targets.filter((target) => target.alive).slice(0, 3)
     .map((target, index) => ({ target, delay: index * 0.38, flight: 0, impacted: false }));
   state.airstrikeEffects = [];
   showToast("Поддержка в пути — отойди от отмеченных зон!");
+}
+
+function setGamePaused(paused) {
+  if (!gameState || gameState.ended) return;
+  gameState.paused = paused;
+  gameLastFrame = performance.now();
+  gameKeys.clear();
+  const button = document.querySelector("#pause-game");
+  button.textContent = paused ? "Продолжить" : "Пауза";
+  button.setAttribute("aria-pressed", String(paused));
+  document.querySelector("#game-session-status").textContent = paused
+    ? "Пауза · раунд остановлен"
+    : "Идёт игра · удачи!";
+  playGameCue("tap");
 }
 
 function startLanternRound(state) {
@@ -1224,7 +1324,7 @@ function moveMazePlayer(state, dx, dy) {
 }
 
 function handleGameAction() {
-  if (!gameState || gameState.ended) return;
+  if (!gameState || gameState.ended || gameState.paused) return;
   const state = gameState;
   if (window.KaganExtraGames.isGame(currentGameId)) {
     window.KaganExtraGames.action(currentGameId, state, gameWidth / 2, gameHeight / 2, endGame);
@@ -1512,11 +1612,20 @@ function drawGame() {
     drawHud(ctx, `До маяка: ${Math.max(0, 32 - Math.floor(state.elapsed))} сек.`, `Жизни: ${"♥".repeat(Math.max(0, state.lives))}`);
   }
   if (state.viewMode === "first") drawFirstPersonOverlay(ctx);
-  if (state.ended) {
+  if (state.paused) {
+    ctx.fillStyle = "#080b16d9";
+    ctx.fillRect(0, 0, gameWidth, gameHeight);
+    ctx.fillStyle = "#f4f1e9";
+    ctx.font = "800 42px Manrope, sans-serif";
+    ctx.fillText("ПАУЗА", gameWidth / 2, 245);
+    ctx.fillStyle = "#bfc8d0";
+    ctx.font = "17px 'DM Sans', sans-serif";
+    ctx.fillText("Нажми P или «Продолжить», когда будешь готов", gameWidth / 2, 290);
+  } else if (state.ended) {
     ctx.fillStyle = "#080b16bb"; ctx.fillRect(0, 0, gameWidth, gameHeight);
-    ctx.fillStyle = "#f4f1e9"; ctx.font = "700 38px Manrope, sans-serif"; ctx.fillText("Игра окончена", gameWidth / 2, 235);
+    ctx.fillStyle = "#f4f1e9"; ctx.font = "700 38px Manrope, sans-serif"; ctx.fillText(state.completed ? "Победа!" : "Раунд завершён", gameWidth / 2, 235);
     ctx.fillStyle = "#d5f36a"; ctx.font = "20px 'DM Sans', sans-serif"; ctx.fillText(state.endMessage || `Счёт: ${state.score}`, gameWidth / 2, 280);
-    ctx.fillStyle = "#c4c5d1"; ctx.font = "15px 'DM Sans', sans-serif"; ctx.fillText("Нажми «Начать заново», чтобы сыграть ещё раз", gameWidth / 2, 325);
+    ctx.fillStyle = "#c4c5d1"; ctx.font = "15px 'DM Sans', sans-serif"; ctx.fillText("Сыграй ещё раз или выбери следующую игру", gameWidth / 2, 325);
   }
   drawGameBrand(ctx);
 }
@@ -1962,11 +2071,16 @@ function runGameFrame(now) {
   if (!document.querySelector("#game-dialog").open) return;
   const delta = Math.min((now - gameLastFrame) / 1000, 0.04);
   gameLastFrame = now;
+  if (gameState.paused) {
+    drawGame();
+    gameFrameId = requestAnimationFrame(runGameFrame);
+    return;
+  }
   if (currentGameId === "crystals" && gameState.lockTime > 0) {
     gameState.lockTime -= delta;
     if (gameState.lockTime <= 0) {
       gameState.opened = [];
-      if (gameState.matched.size === 16) endGame(`Все пары собраны за ${gameState.attempts} ходов!`);
+      if (gameState.matched.size === 16) endGame(`Все пары собраны за ${gameState.attempts} ходов!`, true);
     }
   } else {
     updateGame(delta);
@@ -2050,6 +2164,23 @@ document.addEventListener("click", (event) => {
 
 document.querySelector("#close-game").addEventListener("click", () => document.querySelector("#game-dialog").close());
 document.querySelector("#restart-game").addEventListener("click", () => startGame(currentGameId));
+document.querySelector("#replay-game").addEventListener("click", () => startGame(currentGameId));
+document.querySelector("#next-game").addEventListener("click", () => {
+  const currentIndex = games.findIndex((game) => game.id === currentGameId);
+  if (currentIndex >= 0) startGame(games[(currentIndex + 1) % games.length].id);
+});
+document.querySelector("#pause-game").addEventListener("click", () => {
+  if (gameState) setGamePaused(!gameState.paused);
+});
+document.querySelector("#sound-game").addEventListener("click", () => {
+  const previousSound = gamePreferences.soundEnabled;
+  gamePreferences.soundEnabled = !gamePreferences.soundEnabled;
+  if (!saveGamePreferences()) gamePreferences.soundEnabled = previousSound;
+  const button = document.querySelector("#sound-game");
+  button.textContent = gamePreferences.soundEnabled ? "Звук: вкл." : "Звук: выкл.";
+  button.setAttribute("aria-pressed", String(gamePreferences.soundEnabled));
+  if (gamePreferences.soundEnabled) playGameCue("tap");
+});
 document.querySelector("#tactical-support").addEventListener("click", () => {
   if (currentGameId === "tacstrike" && gameState) requestTacticalAirSupport(gameState);
 });
@@ -2076,10 +2207,23 @@ document.querySelector("#cosmetic-shop").addEventListener("click", (event) => {
 document.querySelector("#game-dialog").addEventListener("close", () => {
   cancelAnimationFrame(gameFrameId);
   gameKeys.clear();
+  if (gameState) gameState.paused = false;
+  document.querySelector("#pause-game").setAttribute("aria-pressed", "false");
   document.querySelector("#game-view-switch").hidden = false;
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && document.querySelector("#game-dialog").open && gameState && !gameState.ended && !gameState.paused) {
+    setGamePaused(true);
+  }
 });
 document.addEventListener("keydown", (event) => {
   if (!document.querySelector("#game-dialog").open) return;
+  if (event.code === "KeyP" && !event.repeat) {
+    event.preventDefault();
+    if (gameState) setGamePaused(!gameState.paused);
+    return;
+  }
+  if (gameState?.paused && event.key !== "Escape") return;
   if (currentGameId === "tacstrike" && event.code === "KeyR" && gameState) {
     event.preventDefault();
     startTacticalReload(gameState);
@@ -2100,6 +2244,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => gameKeys.delete(event.code));
 gameCanvas.addEventListener("pointerdown", (event) => {
   const point = canvasPoint(event);
+  if (gameState?.paused) return;
   if (event.button === 2 && currentGameId === "mineralmines") event.preventDefault();
   if (gameState && !gameState.ended && window.KaganExtraGames.action(currentGameId, gameState, point.x, point.y, endGame, event)) return;
   if (currentGameId === "tacstrike" && gameState && !gameState.ended) {
@@ -2170,6 +2315,9 @@ gameCanvas.addEventListener("pointerdown", (event) => {
       if (gameState.cards[gameState.opened[0]] === gameState.cards[gameState.opened[1]]) {
         gameState.opened.forEach((cardIndex) => gameState.matched.add(cardIndex));
         gameState.opened = [];
+        if (gameState.matched.size === gameState.cards.length) {
+          endGame(`Все пары собраны за ${gameState.attempts} ходов!`, true);
+        }
       } else {
         gameState.lockTime = 0.8;
       }
@@ -2186,7 +2334,7 @@ gameCanvas.addEventListener("pointerdown", (event) => {
   }
 });
 gameCanvas.addEventListener("pointermove", (event) => {
-  if (!gameState || gameState.ended) return;
+  if (!gameState || gameState.ended || gameState.paused) return;
   if (window.KaganExtraGames.pointerMove(currentGameId, gameState, canvasPoint(event).x, canvasPoint(event).y)) return;
   if (currentGameId === "tacstrike") {
     const point = canvasPoint(event);
